@@ -1,16 +1,11 @@
 # crossclip
 
-A new Flutter project.
+A project to share text between Windows and Android Devices.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project uses Firebase to share real-time data.
+I hope to use WSL on Windows to run the Android App on Windows.
+Hoping to add Linux, MacOS and iOS support sometime in the future.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+New changes will go into the beta branch first.
