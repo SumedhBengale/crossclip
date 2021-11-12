@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.crossclip">
+    package="com.ssb.crossclip">
    <application
         android:label="crossclip"
         android:icon="@mipmap/ic_launcher">
