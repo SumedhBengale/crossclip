@@ -68,7 +68,16 @@ class _SignUpState extends State<SignUp> {
                               hintText: 'Confirm your Password',
                             ),
                           )),
-                      OutlinedButton(
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          overlayColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.yellow),
+                        ),
                         onPressed: () {
                           if (passwordController.text ==
                               passwordController1.text) {

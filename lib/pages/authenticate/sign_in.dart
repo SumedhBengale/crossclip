@@ -56,7 +56,16 @@ class _SignInState extends State<SignIn> {
                               hintText: 'Enter your Password',
                             ),
                           )),
-                      OutlinedButton(
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          overlayColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.yellow),
+                        ),
                         onPressed: () {
                           print(emailController.text);
                           print(passwordController.text);
