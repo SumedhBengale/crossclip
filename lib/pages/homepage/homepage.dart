@@ -1,7 +1,7 @@
-import 'package:crossclip/pages/authnticate/auth_services.dart';
-import 'package:crossclip/pages/authnticate/sign_in.dart';
+import 'package:crossclip/pages/authenticate/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'clipboard.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,21 +15,27 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Builder(
-      builder: (context) => Scaffold(
-        appBar: AppBar(
-          title: const Text("CrossClip"),
-        ),
-        body: OutlinedButton(
-          onPressed: () async => {
-            await FirebaseAuth.instance.signOut(),
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SignIn()),
-            )
-          },
-          child: const Text("Sign Out"),
-        ),
-      ),
-    ));
+            builder: (context) => Scaffold(
+                  drawer: Drawer(
+                    child: ListView(children: [
+                      OutlinedButton(
+                        onPressed: () async => {
+                          await FirebaseAuth.instance.signOut(),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignIn()),
+                          )
+                        },
+                        child: const Text("Sign Out"),
+                      ),
+                      Text(FirebaseAuth.instance.currentUser!.uid)
+                    ]),
+                  ),
+                  appBar: AppBar(
+                    title: const Text("CrossClip"),
+                  ),
+                  body: const Clipboard(),
+                )));
   }
 }

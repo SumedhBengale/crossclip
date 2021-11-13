@@ -1,20 +1,18 @@
-import 'package:crossclip/pages/authnticate/auth_services.dart';
+import 'package:crossclip/pages/authenticate/sign_up.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'auth_services.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
-
+class SignIn extends StatefulWidget {
+  const SignIn({Key? key}) : super(key: key);
   @override
-  _SignUpState createState() => _SignUpState();
+  _SignInState createState() => _SignInState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignInState extends State<SignIn> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final passwordController1 = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,7 +24,7 @@ class _SignUpState extends State<SignUp> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Sign Up",
+                        "Sign In",
                         style: TextStyle(
                           shadows: const <Shadow>[
                             Shadow(
@@ -58,24 +56,12 @@ class _SignUpState extends State<SignUp> {
                               hintText: 'Enter your Password',
                             ),
                           )),
-                      Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: TextField(
-                            controller: passwordController1,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Confirm your Password',
-                            ),
-                          )),
                       OutlinedButton(
                         onPressed: () {
-                          if (passwordController.text ==
-                              passwordController1.text) {
-                            print(emailController.text);
-                            print(passwordController.text);
-                            emailSignUp(
-                                emailController.text, passwordController.text);
-                          }
+                          print(emailController.text);
+                          print(passwordController.text);
+                          emailSignIn(
+                              emailController.text, passwordController.text);
                           FirebaseAuth.instance.authStateChanges().listen(
                             (User? user) {
                               if (user != null) {
@@ -88,8 +74,17 @@ class _SignUpState extends State<SignUp> {
                             },
                           );
                         },
-                        child: const Text('Sign Up'),
+                        child: const Text('Sign In'),
                       ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignUp()),
+                            );
+                          },
+                          child: const Text("Don't have an Account"))
                     ],
                   )),
                 )));

@@ -1,4 +1,4 @@
-import 'package:crossclip/pages/authnticate/sign_in.dart';
+import 'package:crossclip/pages/authenticate/sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +11,11 @@ void main() {
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
 
-  // Create the initialization Future outside of `build`:
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
-  /// The future is part of the state of our widget. We should not call `initializeApp`
-  /// directly inside [build].
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override

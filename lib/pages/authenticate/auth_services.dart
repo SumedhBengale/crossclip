@@ -1,4 +1,4 @@
-import 'package:crossclip/pages/authnticate/sign_in.dart';
+import 'package:crossclip/pages/authenticate/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> emailSignUp(email, password) async {
