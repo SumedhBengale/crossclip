@@ -18,56 +18,65 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Builder(
-            builder: (context) => Scaffold(
-                  body: Center(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          shadows: const <Shadow>[
-                            Shadow(
-                              offset: Offset(2.0, 2.0),
-                              blurRadius: 1.0,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                            )
-                          ],
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.yellow[300],
+    return Builder(
+        builder: (context) => Scaffold(
+                body: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                  Text(
+                    "Sign Up",
+                    style: TextStyle(
+                      shadows: const <Shadow>[
+                        Shadow(
+                          offset: Offset(2.0, 2.0),
+                          blurRadius: 1.0,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        )
+                      ],
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.yellow[300],
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: TextField(
+                        controller: emailController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.yellow)),
+                          hintText: 'Enter your Email',
                         ),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: TextField(
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter your Email',
-                            ),
-                          )),
-                      Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: TextField(
-                            controller: passwordController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter your Password',
-                            ),
-                          )),
-                      Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: TextField(
-                            controller: passwordController1,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Confirm your Password',
-                            ),
-                          )),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: TextField(
+                        controller: passwordController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.yellow)),
+                          hintText: 'Enter your Password',
+                        ),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: TextField(
+                        controller: passwordController1,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.yellow)),
+                          hintText: 'Confirm your Password',
+                        ),
+                      )),
+                  Container(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                       ElevatedButton(
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all(
@@ -111,10 +120,31 @@ class _SignUpState extends State<SignUp> {
                             },
                           );
                         },
-                        child: const Text('Sign Up'),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          overlayColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.red),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'Back',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      )
                     ],
                   )),
-                )));
+                ]))));
   }
 }

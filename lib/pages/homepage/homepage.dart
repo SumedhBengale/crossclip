@@ -1,5 +1,4 @@
-import 'package:crossclip/pages/authenticate/sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crossclip/pages/homepage/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'clipboard.dart';
@@ -18,30 +17,38 @@ class _HomePageState extends State<HomePage> {
         home: Builder(
             builder: (context) => Scaffold(
                   backgroundColor: Colors.white,
-                  drawer: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(35),
-                        bottomRight: Radius.circular(35)),
-                    child: Drawer(
-                      child: ListView(children: [
-                        OutlinedButton(
-                          onPressed: () async => {
-                            await FirebaseAuth.instance.signOut(),
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SignIn()),
-                            )
-                          },
-                          child: const Text("Sign Out"),
-                        ),
-                        Text(FirebaseAuth.instance.currentUser!.uid)
-                      ]),
+                  floatingActionButtonLocation:
+                      FloatingActionButtonLocation.centerFloat,
+                  floatingActionButton: FloatingActionButton.extended(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    backgroundColor: Colors.yellow,
+                    onPressed: () => {},
+                    label: const Text(
+                      'Add to Cipboard',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
                     ),
+                    icon: const Icon(Icons.add, color: Colors.black),
                   ),
+                  drawer: Theme(
+                      data: Theme.of(context).copyWith(
+                        canvasColor: Colors
+                            .white, //This will change the drawer background to blue.
+                        //other styles
+                      ),
+                      child: const ClipRRect(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(35),
+                            bottomRight: Radius.circular(35)),
+                        child: Drawer(
+                          child: MainDrawer(),
+                        ),
+                      )),
                   appBar: AppBar(
                     centerTitle: true,
-                    iconTheme: const IconThemeData(color: Colors.white),
+                    iconTheme: const IconThemeData(color: Colors.black),
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(
                       bottom: Radius.circular(30),
@@ -50,10 +57,10 @@ class _HomePageState extends State<HomePage> {
                     title: const Text(
                       "CrossClip",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
+                          fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                   ),
-                  body: Clipboard(),
+                  body: const Clipboard(),
                 )));
   }
 }

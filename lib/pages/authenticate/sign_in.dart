@@ -44,6 +44,8 @@ class _SignInState extends State<SignIn> {
                             controller: emailController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.yellow)),
                               hintText: 'Enter your Email',
                             ),
                           )),
@@ -53,6 +55,8 @@ class _SignInState extends State<SignIn> {
                             controller: passwordController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.yellow)),
                               hintText: 'Enter your Password',
                             ),
                           )),
@@ -83,7 +87,10 @@ class _SignInState extends State<SignIn> {
                             },
                           );
                         },
-                        child: const Text('Sign In'),
+                        child: const Text(
+                          'Sign In',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                       TextButton(
                           onPressed: () {
