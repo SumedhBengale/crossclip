@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:crossclip/main.dart';
 
 class Clipboard extends StatefulWidget {
   const Clipboard({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _ClipboardState extends State<Clipboard> {
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (!snapshot.hasData) {
-          return const Text("Loading");
+          return const Loading();
         }
         var userDocument = snapshot.data!;
         return ListView.builder(
@@ -41,15 +42,25 @@ class _ClipboardState extends State<Clipboard> {
               return Dismissible(
                   key: UniqueKey(),
                   onDismissed: (direction) {
-                    setState(() {
-                      var val = [];
-                      val.add(userDocument['text_clipboard'][index].toString());
-                      documentReference.update(
-                          {'text_clipboard': FieldValue.arrayRemove(val)});
-                    });
+                    var val = [];
+                    val.add(userDocument['text_clipboard'][index].toString());
+                    documentReference.update(
+                        {'text_clipboard': FieldValue.arrayRemove(val)});
 
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Dismissed'),
+                      behavior: SnackBarBehavior.fixed,
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.yellow),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                      ),
+                      content: Text(
+                        'Deleted from Clipboard',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ));
                   },
                   background: Container(color: Colors.white),
@@ -94,7 +105,33 @@ class _ClipboardState extends State<Clipboard> {
                                                 userDocument['text_clipboard']
                                                         [index]
                                                     .toString())
-                                            .then((value) => print('copied'))
+                                            .then((value) => {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                          const SnackBar(
+                                                    behavior:
+                                                        SnackBarBehavior.fixed,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                          color: Colors.yellow),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(15),
+                                                        topRight:
+                                                            Radius.circular(15),
+                                                      ),
+                                                    ),
+                                                    content: Text(
+                                                      'Copied to Local Clipboard',
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    ),
+                                                  ))
+                                                })
                                       },
                                       child: const Icon(
                                         Icons.copy,

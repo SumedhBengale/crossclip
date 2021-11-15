@@ -1,3 +1,4 @@
+import 'package:crossclip/pages/homepage/clipboard_add_page.dart';
 import 'package:crossclip/pages/homepage/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -23,7 +24,11 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     backgroundColor: Colors.yellow,
-                    onPressed: () => {},
+                    onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const ClipboardAddPage();
+                        }),
                     label: const Text(
                       'Add to Cipboard',
                       style: TextStyle(

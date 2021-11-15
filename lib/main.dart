@@ -74,12 +74,7 @@ class SomethingWentWrong extends StatefulWidget {
 class _SomethingWentWrongState extends State<SomethingWentWrong> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Something Went Wrong",
-        textDirection: TextDirection.ltr,
-      ),
-    );
+    return const Center(child: Text("Soemthing Went Wrong"));
   }
 }
 
@@ -93,11 +88,11 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Loading",
-        textDirection: TextDirection.ltr,
-      ),
-    );
+    return const MaterialApp(
+        home: Scaffold(
+            body: Center(
+                child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Colors.yellow)))));
   }
 }

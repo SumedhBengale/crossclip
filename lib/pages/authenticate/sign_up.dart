@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:core';
 import 'package:crossclip/pages/authenticate/auth_services.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,13 +19,15 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    var _key = GlobalKey<ScaffoldState>();
     return Builder(
         builder: (context) => Scaffold(
-                body: Center(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+            key: _key,
+            body: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
                   Text(
                     "Sign Up",
                     style: TextStyle(
@@ -42,7 +45,9 @@ class _SignUpState extends State<SignUp> {
                   ),
                   Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: TextField(
+                      child: TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: validateEmail,
                         controller: emailController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -53,7 +58,10 @@ class _SignUpState extends State<SignUp> {
                       )),
                   Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: TextField(
+                      child: TextFormField(
+                        obscureText: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: validatePassword,
                         controller: passwordController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -64,7 +72,10 @@ class _SignUpState extends State<SignUp> {
                       )),
                   Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: TextField(
+                      child: TextFormField(
+                        obscureText: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: confirmPassword,
                         controller: passwordController1,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -92,8 +103,8 @@ class _SignUpState extends State<SignUp> {
                               passwordController1.text) {
                             print(emailController.text);
                             print(passwordController.text);
-                            emailSignUp(
-                                emailController.text, passwordController.text);
+                            emailSignUp(emailController.text,
+                                passwordController.text, _key);
                           }
                           FirebaseAuth.instance.authStateChanges().listen(
                             (User? user) {
@@ -146,5 +157,35 @@ class _SignUpState extends State<SignUp> {
                     ],
                   )),
                 ]))));
+  }
+
+  String? validateEmail(String? value) {
+    if (value != null) {
+      if (value.length > 5 && value.contains('@')) {
+        return null;
+      }
+      return 'Enter a Valid Email Address';
+    }
+  }
+
+  String? validatePassword(String? value) {
+    if (value != null) {
+      if (value.length > 5 &&
+          (value.contains(RegExp(r'[A-Z]')) ||
+              value.contains(RegExp(r'[a-z]'))) &&
+          value.contains(RegExp(r'[0-9]'))) {
+        return null;
+      }
+      return 'Use a combination of letters and numbers';
+    }
+  }
+
+  String? confirmPassword(String? value) {
+    // ignore: unrelated_type_equality_checks
+    if (value != passwordController.text) {
+      return 'Passwords do not match';
+    } else {
+      return null;
+    }
   }
 }

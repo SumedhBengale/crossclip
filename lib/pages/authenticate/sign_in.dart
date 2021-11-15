@@ -15,9 +15,11 @@ class _SignInState extends State<SignIn> {
   final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    var _key = GlobalKey<ScaffoldState>();
     return MaterialApp(
         home: Builder(
             builder: (context) => Scaffold(
+                  key: _key,
                   body: Center(
                       child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -40,7 +42,10 @@ class _SignInState extends State<SignIn> {
                       ),
                       Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child: TextField(
+                          child: TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: validateEmail,
                             controller: emailController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
@@ -51,8 +56,12 @@ class _SignInState extends State<SignIn> {
                           )),
                       Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child: TextField(
+                          child: TextFormField(
+                            obscureText: true,
                             controller: passwordController,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: validatePassword,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               focusedBorder: OutlineInputBorder(
@@ -73,8 +82,8 @@ class _SignInState extends State<SignIn> {
                         onPressed: () {
                           print(emailController.text);
                           print(passwordController.text);
-                          emailSignIn(
-                              emailController.text, passwordController.text);
+                          emailSignIn(emailController.text,
+                              passwordController.text, _key);
                           FirebaseAuth.instance.authStateChanges().listen(
                             (User? user) {
                               if (user != null) {
@@ -105,4 +114,27 @@ class _SignInState extends State<SignIn> {
                   )),
                 )));
   }
+
+  String? validateEmail(String? value) {
+    if (value != null) {
+      if (value.length > 5 && value.contains('@')) {
+        return null;
+      }
+      return 'Enter a Valid Email Address';
+    }
+  }
+
+  String? validatePassword(String? value) {
+    if (value != null) {
+      if (value.length > 5 &&
+          (value.contains(RegExp(r'[A-Z]')) ||
+              value.contains(RegExp(r'[a-z]'))) &&
+          value.contains(RegExp(r'[0-9]'))) {
+        return null;
+      }
+      return 'Use a combination of letters and numbers';
+    }
+  }
+
+  String? confirmEmail(String? value) {}
 }

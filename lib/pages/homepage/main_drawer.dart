@@ -12,13 +12,20 @@ class MainDrawer extends StatefulWidget {
 class _MainDrawerState extends State<MainDrawer> {
   @override
   Widget build(BuildContext context) {
-    var user = FirebaseAuth.instance.currentUser!.email;
     return ListView(padding: const EdgeInsets.all(0.0), children: [
-      SizedBox(
+      const SizedBox(
           height: 114.0,
           child: DrawerHeader(
-            decoration: const BoxDecoration(color: Colors.yellow),
-            child: ListTile(leading: Text('$user')),
+            decoration: BoxDecoration(color: Colors.yellow),
+            padding: EdgeInsets.all(20),
+            child: ListTile(
+                leading: Text(
+              'Welcome',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            )),
           )),
       Card(
           margin: const EdgeInsets.all(10),
@@ -34,7 +41,7 @@ class _MainDrawerState extends State<MainDrawer> {
               ),
               onPressed: () async => {
                     await FirebaseAuth.instance.signOut(),
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => const SignIn()),
                     )
