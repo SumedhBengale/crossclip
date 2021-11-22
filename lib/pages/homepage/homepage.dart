@@ -1,8 +1,7 @@
-import 'package:crossclip/pages/homepage/clipboard_add_page.dart';
+import 'package:crossclip/pages/homepage/media/media_clipboard.dart';
 import 'package:crossclip/pages/homepage/main_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'clipboard.dart';
+import 'text/text_clipboard.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,27 +15,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Builder(
-            builder: (context) => Scaffold(
+            builder: (context) => DefaultTabController(
+                length: 2,
+                child: Scaffold(
                   backgroundColor: Colors.white,
-                  floatingActionButtonLocation:
-                      FloatingActionButtonLocation.centerFloat,
-                  floatingActionButton: FloatingActionButton.extended(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    backgroundColor: Colors.yellow,
-                    onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const ClipboardAddPage();
-                        }),
-                    label: const Text(
-                      'Add to Cipboard',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    icon: const Icon(Icons.add, color: Colors.black),
-                  ),
                   drawer: Theme(
                       data: Theme.of(context).copyWith(
                         canvasColor: Colors
@@ -52,11 +34,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       )),
                   appBar: AppBar(
+                    elevation: 0,
                     centerTitle: true,
                     iconTheme: const IconThemeData(color: Colors.black),
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(30),
+                      bottom: Radius.circular(10),
                     )),
                     backgroundColor: Colors.yellow,
                     title: const Text(
@@ -64,8 +47,33 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.black),
                     ),
+                    bottom: TabBar(
+                        // unselectedLabelColor: Colors.white,
+                        // indicatorSize: TabBarIndicatorSize.label,
+                        overlayColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                        indicator: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10)),
+                            color: Colors.white),
+                        tabs: const [
+                          Tab(
+                            child: Text(
+                              "Text",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          Tab(
+                            child: Text("Media and Files",
+                                style: TextStyle(color: Colors.black)),
+                          )
+                        ]),
                   ),
-                  body: const Clipboard(),
-                )));
+                  body: const TabBarView(children: [
+                    TextClipboard(),
+                    MediaClipboard(),
+                  ]),
+                ))));
   }
 }

@@ -120,7 +120,10 @@ class _SignUpState extends State<SignUp> {
                                 users
                                     .doc(FirebaseAuth.instance.currentUser!.uid)
                                     .set(
-                                      {'text_clipboard': []},
+                                      {
+                                        'text_clipboard': [],
+                                        'media_clipboard': {}
+                                      },
                                       SetOptions(merge: true),
                                     )
                                     .then((value) =>

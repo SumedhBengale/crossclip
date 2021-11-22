@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(const App());
 }
 
@@ -26,7 +28,8 @@ class _AppState extends State<App> {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return const SomethingWentWrong();
+          // return const SomethingWentWrong();
+          print(snapshot.error);
         }
 
         // Once complete, show your application
@@ -74,7 +77,11 @@ class SomethingWentWrong extends StatefulWidget {
 class _SomethingWentWrongState extends State<SomethingWentWrong> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("Soemthing Went Wrong"));
+    return const Center(
+        child: Text(
+      "Something Went Wrong",
+      textDirection: TextDirection.ltr,
+    ));
   }
 }
 

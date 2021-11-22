@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ClipboardAddPage extends StatefulWidget {
-  const ClipboardAddPage({Key? key}) : super(key: key);
+class TextClipboardAddPage extends StatefulWidget {
+  const TextClipboardAddPage({Key? key}) : super(key: key);
 
   @override
-  _ClipboardAddPageState createState() => _ClipboardAddPageState();
+  _TextClipboardAddPageState createState() => _TextClipboardAddPageState();
 }
 
-class _ClipboardAddPageState extends State<ClipboardAddPage> {
+class _TextClipboardAddPageState extends State<TextClipboardAddPage> {
   DocumentReference documentReference = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid);
@@ -50,12 +50,9 @@ class _ClipboardAddPageState extends State<ClipboardAddPage> {
                           MaterialStateProperty.all<Color>(Colors.yellow),
                     ),
                     onPressed: () => {
-                          list.add(addToClipboard.text),
-                          documentReference.update(
-                              {'text_clipboard': FieldValue.arrayUnion(list)}),
-                          Navigator.pop(context),
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 1),
                             behavior: SnackBarBehavior.fixed,
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
@@ -69,7 +66,11 @@ class _ClipboardAddPageState extends State<ClipboardAddPage> {
                               'Added to Clipboard',
                               style: TextStyle(color: Colors.black),
                             ),
-                          ))
+                          )),
+                          list.add(addToClipboard.text),
+                          documentReference.update(
+                              {'text_clipboard': FieldValue.arrayUnion(list)}),
+                          Navigator.pop(context),
                         },
                     child: const SizedBox(
                         width: double.infinity,
