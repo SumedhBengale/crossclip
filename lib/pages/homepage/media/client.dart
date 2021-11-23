@@ -3,27 +3,25 @@ import 'dart:typed_data';
 
 int size = 0;
 BytesBuilder builder = BytesBuilder(copy: false);
-void main() async {
-  final socket = await Socket.connect('localhost', 2714);
-  print("Connected to:" '${socket.remoteAddress.address}:${socket.remotePort}');
-  socket.write('Send Data');
-  socket.listen((Uint8List data) async {
-    await Future.delayed(const Duration(seconds: 1));
-    dataHandler(data);
-    size = size + data.lengthInBytes;
-    print(size);
-  });
-  await Future.delayed(const Duration(seconds: 10));
-  await writeToFile('1(recieved).mkv');
-  print("File Written");
-  socket.close();
-  socket.destroy();
+void startClient(String ipAddress, String fileName, String downloadPath) async {
+  var socket = await Socket.connect(ipAddress, 2714);
+  try {
+    print(
+        "Connected to:" '${socket.remoteAddress.address}:${socket.remotePort}');
+    socket.write('Send Data');
+
+    var file = File('$downloadPath/$fileName').openWrite();
+    try {
+      await socket.map(toIntList).pipe(file);
+      print("File written");
+    } finally {
+      file.close();
+    }
+  } finally {
+    socket.destroy();
+  }
 }
 
-void dataHandler(Uint8List data) {
-  builder.add(data);
-}
-
-Future<void> writeToFile(String path) {
-  return File(path).writeAsBytes(builder.toBytes());
+List<int> toIntList(Uint8List source) {
+  return List.from(source);
 }

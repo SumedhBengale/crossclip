@@ -1,6 +1,11 @@
+import 'package:universal_io/io.dart';
 import 'package:crossclip/pages/authenticate/sign_in.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
+String? selectedDirectory = '';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({Key? key}) : super(key: key);
@@ -70,6 +75,18 @@ class _MainDrawerState extends State<MainDrawer> {
             "Note:Make sure to Sign In with the same Id in all devices using Crossclip",
             style: TextStyle(fontWeight: FontWeight.bold),
           )),
+      OutlinedButton(
+          onPressed: () async => {
+                if (Platform.isAndroid)
+                  {
+                    selectedDirectory =
+                        await FilePicker.platform.getDirectoryPath(),
+                    setState(() {}),
+                    if (selectedDirectory == null) {}
+                  }
+              },
+          child: const Text("Set Download Path")),
+      Text(selectedDirectory.toString()),
     ]);
   }
 }

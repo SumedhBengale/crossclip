@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   network_info_plus_windows
+  r_get_ip
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
