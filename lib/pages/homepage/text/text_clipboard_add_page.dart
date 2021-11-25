@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crossclip/pages/homepage/text/text_clipboard.dart';
+import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 
 class TextClipboardAddPage extends StatefulWidget {
@@ -10,13 +10,18 @@ class TextClipboardAddPage extends StatefulWidget {
 }
 
 class _TextClipboardAddPageState extends State<TextClipboardAddPage> {
-  DocumentReference documentReference = FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser!.uid);
+  var auth =
+      FirebaseAuth('AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', VolatileStore());
+  var uid = FirebaseAuth.instance.userId;
+  var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
+
+  get addVal => val;
+
   @override
   Widget build(BuildContext context) {
+    var documentRef = firestore.collection('users').document(uid);
     final addToClipboard = TextEditingController();
-    var list = [];
+
     return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         elevation: 16,
@@ -67,9 +72,8 @@ class _TextClipboardAddPageState extends State<TextClipboardAddPage> {
                               style: TextStyle(color: Colors.black),
                             ),
                           )),
-                          list.add(addToClipboard.text),
-                          documentReference.update(
-                              {'text_clipboard': FieldValue.arrayUnion(list)}),
+                          val.add(addToClipboard.text),
+                          documentRef.update({'text_clipboard': addVal}),
                           Navigator.pop(context),
                         },
                     child: const SizedBox(

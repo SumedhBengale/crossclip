@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:core';
 import 'package:crossclip/pages/authenticate/auth_services.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firedart/firedart.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -98,41 +96,34 @@ class _SignUpState extends State<SignUp> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.yellow),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (passwordController.text ==
                               passwordController1.text) {
                             print(emailController.text);
                             print(passwordController.text);
-                            emailSignUp(emailController.text,
-                                passwordController.text, _key);
+                            await emailSignUp(
+                                emailController.text, passwordController.text);
                           }
-                          FirebaseAuth.instance.authStateChanges().listen(
-                            (User? user) {
-                              if (user != null) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HomePage()),
-                                );
-                                CollectionReference users = FirebaseFirestore
-                                    .instance
-                                    .collection('users');
-                                users
-                                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                                    .set(
-                                      {
-                                        'text_clipboard': [],
-                                        'media_clipboard': {}
-                                      },
-                                      SetOptions(merge: true),
-                                    )
-                                    .then((value) =>
-                                        print("Clipboard sucessfully created"))
-                                    .catchError((error) => print(
-                                        "Failed to create clipboard: $error"));
-                              }
-                            },
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()),
                           );
+                          var auth = FirebaseAuth(
+                              'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM',
+                              VolatileStore());
+                          var firestore = Firestore('cross-clip-2714',
+                              auth: FirebaseAuth.instance);
+                          var users = firestore.collection('users');
+                          users
+                              .document(FirebaseAuth.instance.userId)
+                              .set(
+                                  {'text_clipboard': [], 'media_clipboard': []})
+                              .then((value) =>
+                                  print("Clipboard sucessfully created"))
+                              .catchError((error) =>
+                                  print("Failed to create clipboard: $error"));
                         },
                         child: const Text(
                           'Sign Up',

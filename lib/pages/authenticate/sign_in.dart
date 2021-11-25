@@ -1,6 +1,5 @@
 import 'package:crossclip/pages/authenticate/sign_up.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'auth_services.dart';
 
@@ -15,11 +14,9 @@ class _SignInState extends State<SignIn> {
   final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    var _key = GlobalKey<ScaffoldState>();
     return MaterialApp(
         home: Builder(
             builder: (context) => Scaffold(
-                  key: _key,
                   body: Center(
                       child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -79,21 +76,15 @@ class _SignInState extends State<SignIn> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.yellow),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           print(emailController.text);
                           print(passwordController.text);
-                          emailSignIn(emailController.text,
-                              passwordController.text, _key);
-                          FirebaseAuth.instance.authStateChanges().listen(
-                            (User? user) {
-                              if (user != null) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HomePage()),
-                                );
-                              }
-                            },
+                          await emailSignIn(
+                              emailController.text, passwordController.text);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()),
                           );
                         },
                         child: const Text(

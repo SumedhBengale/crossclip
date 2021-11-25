@@ -1,9 +1,10 @@
 import 'package:crossclip/pages/homepage/text/text_clipboard_add_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firedart/firedart.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:crossclip/main.dart';
+
+var val = [];
 
 class TextClipboard extends StatefulWidget {
   const TextClipboard({Key? key}) : super(key: key);
@@ -13,27 +14,27 @@ class TextClipboard extends StatefulWidget {
 }
 
 class _TextClipboardState extends State<TextClipboard> {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  DocumentReference documentReference = FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser!.uid);
-  Stream<DocumentSnapshot> documentStream = FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .snapshots();
-
+  var auth =
+      FirebaseAuth('AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', VolatileStore());
+  var uid = FirebaseAuth.instance.userId;
+  var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
   @override
   Widget build(BuildContext context) {
+    var documentStream = firestore.collection('users').document(uid).stream;
+    var documentRef = firestore.collection('users').document(uid);
     return Scaffold(
         backgroundColor: Colors.white,
-        body: StreamBuilder<DocumentSnapshot>(
+        body: StreamBuilder(
           stream: documentStream,
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
+              print(snapshot);
+              print('UID:$uid');
+              print(auth.apiKey);
               return const Loading();
             }
             var userDocument = snapshot.data!;
+            val = userDocument['text_clipboard'].toList();
             return ListView.builder(
                 physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics()),
@@ -62,11 +63,10 @@ class _TextClipboardState extends State<TextClipboard> {
                             style: TextStyle(color: Colors.black),
                           ),
                         ));
-                        var val = [];
-                        val.add(
+
+                        val.remove(
                             userDocument['text_clipboard'][index].toString());
-                        documentReference.update(
-                            {'text_clipboard': FieldValue.arrayRemove(val)});
+                        documentRef.update({'text_clipboard': val});
                       },
                       background: Container(color: Colors.white),
                       child: Card(

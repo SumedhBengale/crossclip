@@ -1,12 +1,13 @@
+import 'package:firedart/firedart.dart';
 import 'package:crossclip/pages/authenticate/sign_in.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  FirebaseAuth.initialize(
+      'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', VolatileStore());
+
   runApp(const App());
 }
 
@@ -18,51 +19,22 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      // Initialize FlutterFire:
-      future: _initialization,
-      builder: (context, snapshot) {
-        // Check for errors
-        if (snapshot.hasError) {
-          // return const SomethingWentWrong();
-          print(snapshot.error);
-        }
-
-        // Once complete, show your application
-        if (snapshot.connectionState == ConnectionState.done) {
-          return const MyApp();
-        }
-
-        // Otherwise, show something whilst waiting for initialization to complete
-        return const Loading();
-      },
-    );
+    return const MyApp();
   }
 }
 
-/// Checks Authentication and decides whether to Authencate or Start on the HomePage
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
-    User? user = auth.currentUser;
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-      }
-    });
-    if (user == null) {
-      return const SignIn();
-    } else {
+    if (auth.isSignedIn) {
       return const HomePage();
+    } else {
+      return const SignIn();
     }
   }
 }

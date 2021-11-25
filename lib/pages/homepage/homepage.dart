@@ -27,8 +27,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: const ClipRRect(
                         borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(35),
-                            bottomRight: Radius.circular(35)),
+                            topRight: Radius.circular(10),
+                            bottomRight: Radius.circular(10)),
                         child: Drawer(
                           child: MainDrawer(),
                         ),

@@ -67,6 +67,51 @@ class _MainDrawerState extends State<MainDrawer> {
                   )
                 ],
               ))),
+      Card(
+          margin: const EdgeInsets.all(10),
+          elevation: 0.0,
+          color: Colors.white,
+          child: TextButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    side: const BorderSide(color: Colors.yellow),
+                    borderRadius: BorderRadius.circular(15))),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.white),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
+              onPressed: () async => {
+                    selectedDirectory =
+                        await FilePicker.platform.getDirectoryPath(),
+                    setState(() {}),
+                    if (selectedDirectory == null) {}
+                  },
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: const [
+                        Icon(
+                          Icons.download,
+                          color: Colors.black,
+                        ),
+                        Text(
+                          "Change Download Path",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        selectedDirectory.toString(),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ]))),
       const Card(
           elevation: 0,
           color: Colors.white,
@@ -75,18 +120,6 @@ class _MainDrawerState extends State<MainDrawer> {
             "Note:Make sure to Sign In with the same Id in all devices using Crossclip",
             style: TextStyle(fontWeight: FontWeight.bold),
           )),
-      OutlinedButton(
-          onPressed: () async => {
-                if (Platform.isAndroid)
-                  {
-                    selectedDirectory =
-                        await FilePicker.platform.getDirectoryPath(),
-                    setState(() {}),
-                    if (selectedDirectory == null) {}
-                  }
-              },
-          child: const Text("Set Download Path")),
-      Text(selectedDirectory.toString()),
     ]);
   }
 }

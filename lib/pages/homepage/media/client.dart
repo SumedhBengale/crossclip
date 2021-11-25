@@ -13,6 +13,7 @@ void startClient(String ipAddress, String fileName, String downloadPath) async {
     var file = File('$downloadPath/$fileName').openWrite();
     try {
       await socket.map(toIntList).pipe(file);
+      print(downloadPath);
       print("File written");
     } finally {
       file.close();
