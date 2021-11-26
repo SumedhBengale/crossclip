@@ -1,9 +1,7 @@
-import 'package:universal_io/io.dart';
+import 'package:firedart/auth/firebase_auth.dart';
 import 'package:crossclip/pages/authenticate/sign_in.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 String? selectedDirectory = '';
 
@@ -19,7 +17,7 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget build(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(0.0), children: [
       const SizedBox(
-          height: 114.0,
+          height: 118.0,
           child: DrawerHeader(
             decoration: BoxDecoration(color: Colors.yellow),
             padding: EdgeInsets.all(20),
@@ -45,7 +43,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () async => {
-                    await FirebaseAuth.instance.signOut(),
+                    FirebaseAuth.instance.signOut(),
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => const SignIn()),

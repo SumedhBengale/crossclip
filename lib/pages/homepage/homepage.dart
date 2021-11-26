@@ -21,9 +21,7 @@ class _HomePageState extends State<HomePage> {
                   backgroundColor: Colors.white,
                   drawer: Theme(
                       data: Theme.of(context).copyWith(
-                        canvasColor: Colors
-                            .white, //This will change the drawer background to blue.
-                        //other styles
+                        canvasColor: Colors.white,
                       ),
                       child: const ClipRRect(
                         borderRadius: BorderRadius.only(
@@ -33,43 +31,47 @@ class _HomePageState extends State<HomePage> {
                           child: MainDrawer(),
                         ),
                       )),
-                  appBar: AppBar(
-                    elevation: 0,
-                    centerTitle: true,
-                    iconTheme: const IconThemeData(color: Colors.black),
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(10),
-                    )),
-                    backgroundColor: Colors.yellow,
-                    title: const Text(
-                      "CrossClip",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                    bottom: TabBar(
-                        // unselectedLabelColor: Colors.white,
-                        // indicatorSize: TabBarIndicatorSize.label,
-                        overlayColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                        indicator: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                            color: Colors.white),
-                        tabs: const [
-                          Tab(
-                            child: Text(
-                              "Text",
-                              style: TextStyle(color: Colors.black),
-                            ),
+                  appBar: PreferredSize(
+                      preferredSize: const Size.fromHeight(110),
+                      child: Theme(
+                        data: ThemeData(
+                          splashColor: Colors.white,
+                        ),
+                        child: AppBar(
+                          elevation: 0,
+                          centerTitle: true,
+                          iconTheme: const IconThemeData(color: Colors.black),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(10),
+                          )),
+                          backgroundColor: Colors.yellow,
+                          title: const Text(
+                            "CrossClip",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
                           ),
-                          Tab(
-                            child: Text("Media and Files",
-                                style: TextStyle(color: Colors.black)),
-                          )
-                        ]),
-                  ),
+                          bottom: const TabBar(
+                              indicator: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10)),
+                                  color: Colors.white),
+                              tabs: [
+                                Tab(
+                                  child: Text(
+                                    "Text",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                Tab(
+                                  child: Text("Media and Files",
+                                      style: TextStyle(color: Colors.black)),
+                                )
+                              ]),
+                        ),
+                      )),
                   body: const TabBarView(children: [
                     TextClipboard(),
                     MediaClipboard(),

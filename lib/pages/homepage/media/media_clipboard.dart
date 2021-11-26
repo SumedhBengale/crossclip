@@ -18,8 +18,6 @@ class MediaClipboard extends StatefulWidget {
 }
 
 class _MediaClipboardState extends State<MediaClipboard> {
-  var auth =
-      FirebaseAuth('AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', VolatileStore());
   var uid = FirebaseAuth.instance.userId;
   var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
 
@@ -29,11 +27,13 @@ class _MediaClipboardState extends State<MediaClipboard> {
   Widget build(BuildContext context) {
     var documentStream = firestore.collection('users').document(uid).stream;
     var documentRef = firestore.collection('users').document(uid);
+
     void sendToClipboard(String fileName, String ipAddress) {
       mediaArray.add({
         'fileName': fileName,
         'ipAddress': ipAddress,
       });
+      print(mediaArray);
       documentRef.update({'media_clipboard': mediaArray});
     }
 
@@ -54,9 +54,9 @@ class _MediaClipboardState extends State<MediaClipboard> {
       }
     }
 
-    void recieveFile(
-        String ipAddress, String fileName, String downloadPath) async {
-      startClient(ipAddress, fileName, downloadPath);
+    void recieveFile(String ipAddress, String fileName, String downloadPath,
+        index, context) async {
+      startClient(ipAddress, fileName, downloadPath, index, context);
     }
 
     return Scaffold(
@@ -80,118 +80,123 @@ class _MediaClipboardState extends State<MediaClipboard> {
                 itemBuilder: (context, index) {
                   String ipAddress;
                   String fileName;
-                  return Card(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      elevation: 3.0,
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: Colors.yellow),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Container(
-                          //The Container Here is necessary for constraints. Without it the Widget library gives an error.
-                          child: ListTile(
-                              minVerticalPadding: 40,
-                              title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        userDocument['media_clipboard'][0]
-                                                ['fileName']
-                                            .toString(),
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis),
-                                    Padding(
-                                        padding: const EdgeInsets.only(top: 5),
-                                        child: Text(
-                                            'Shared on port- ' +
-                                                userDocument['media_clipboard']
-                                                        [0]['ipAddress']
-                                                    .toString() +
-                                                ':2714',
+                  return Dismissible(
+                      key: UniqueKey(),
+                      onDismissed: (direction) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          duration: Duration(seconds: 1),
+                          behavior: SnackBarBehavior.fixed,
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                                color: Color.fromARGB(255, 14, 13, 11)),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                            ),
+                          ),
+                          content: Text(
+                            'Deleted from Clipboard',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ));
+
+                        deleteFromClipboard(index);
+                      },
+                      child: Card(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          elevation: 3.0,
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(color: Colors.yellow),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Container(
+                              //The Container Here is necessary for constraints. Without it the Widget library gives an error.
+                              child: ListTile(
+                                  minVerticalPadding: 40,
+                                  title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            userDocument['media_clipboard']
+                                                    [index]['fileName']
+                                                .toString(),
                                             textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15),
-                                            overflow: TextOverflow.ellipsis))
-                                  ]),
-                              trailing: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                        shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15))),
-                                        overlayColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.white),
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.yellow),
-                                      ),
-                                      onPressed: () {
-                                        ipAddress =
-                                            userDocument['media_clipboard'][0]
-                                                    ['ipAddress']
-                                                .toString();
-                                        fileName =
-                                            userDocument['media_clipboard'][0]
-                                                    ['fileName']
-                                                .toString();
-                                        if (ipAddress ==
-                                            RGetIp.internalIP.toString()) {
-                                          recieveFile(ipAddress, fileName,
-                                              downloadPath!);
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
-                                            duration: Duration(seconds: 1),
-                                            behavior: SnackBarBehavior.fixed,
-                                            backgroundColor: Color.fromARGB(
-                                                255, 236, 213, 213),
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                  color: Colors.yellow),
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(15),
-                                                topRight: Radius.circular(15),
+                                            overflow: TextOverflow.ellipsis),
+                                        Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 5),
+                                            child: Text(
+                                                'Shared on port- ' +
+                                                    userDocument[
+                                                                'media_clipboard']
+                                                            [index]['ipAddress']
+                                                        .toString() +
+                                                    ':2714',
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 15),
+                                                overflow:
+                                                    TextOverflow.ellipsis))
+                                      ]),
+                                  trailing: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                            shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15))),
+                                            overlayColor: MaterialStateProperty
+                                                .all<Color>(Colors.white),
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(Colors.yellow),
+                                          ),
+                                          onPressed: () async {
+                                            ipAddress =
+                                                userDocument['media_clipboard']
+                                                        [index]['ipAddress']
+                                                    .toString();
+                                            fileName =
+                                                userDocument['media_clipboard']
+                                                        [index]['fileName']
+                                                    .toString();
+                                            // if (ipAddress ==
+                                            //     await RGetIp.internalIP) {
+                                            recieveFile(ipAddress, fileName,
+                                                downloadPath!, index, context);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                              duration: Duration(seconds: 1),
+                                              behavior: SnackBarBehavior.fixed,
+                                              backgroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                    color: Colors.yellow),
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(15),
+                                                  topRight: Radius.circular(15),
+                                                ),
                                               ),
-                                            ),
-                                            content: Text(
-                                              'Downloading File',
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                          ));
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
-                                            duration: Duration(seconds: 1),
-                                            behavior: SnackBarBehavior.fixed,
-                                            backgroundColor: Color.fromARGB(
-                                                255, 236, 213, 213),
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                  color: Colors.yellow),
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(15),
-                                                topRight: Radius.circular(15),
+                                              content: Text(
+                                                'Downloading File',
+                                                style: TextStyle(
+                                                    color: Colors.black),
                                               ),
-                                            ),
-                                            content: Text(
-                                              'Sender and Recever are not on the same network',
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                          ));
-                                        }
-                                      },
-                                      child: const Icon(
-                                        Icons.download,
-                                        color: Colors.black,
-                                      ),
-                                    )
-                                  ]))));
+                                            ));
+                                          },
+                                          child: const Icon(
+                                            Icons.download,
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      ])))));
                 });
           },
         ),
@@ -210,15 +215,4 @@ class _MediaClipboardState extends State<MediaClipboard> {
           icon: const Icon(Icons.add, color: Colors.black),
         ));
   }
-}
-
-Widget _buildIpWidget(BuildContext context, AsyncSnapshot<String?> snapshot) {
-  return Text(
-    '${snapshot.hasData ? snapshot.data : "0.0.0.0"}',
-    style: TextStyle(
-      color: Theme.of(context).primaryColor,
-      fontSize: 26,
-      fontWeight: FontWeight.bold,
-    ),
-  );
 }

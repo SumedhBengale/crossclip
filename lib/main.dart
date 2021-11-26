@@ -1,12 +1,21 @@
+import 'dart:io';
+
 import 'package:firedart/firedart.dart';
 import 'package:crossclip/pages/authenticate/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
+import 'package:hive/hive.dart';
+import 'hive_store.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Directory directory = await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+  Hive.registerAdapter(TokenAdapter());
   FirebaseAuth.initialize(
-      'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', VolatileStore());
+      'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', await HiveStore.create());
+  var auth = FirebaseAuth.instance;
 
   runApp(const App());
 }

@@ -23,7 +23,7 @@ class _SignInState extends State<SignIn> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Sign In",
+                        "Cross Clip",
                         style: TextStyle(
                           shadows: const <Shadow>[
                             Shadow(

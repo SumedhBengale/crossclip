@@ -1,5 +1,6 @@
 import 'package:crossclip/pages/authenticate/auth_services.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
+import 'package:crossclip/hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:firedart/firedart.dart';
 
@@ -27,7 +28,7 @@ class _SignUpState extends State<SignUp> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                   Text(
-                    "Sign Up",
+                    "Cross Clip",
                     style: TextStyle(
                       shadows: const <Shadow>[
                         Shadow(
@@ -112,7 +113,7 @@ class _SignUpState extends State<SignUp> {
                           );
                           var auth = FirebaseAuth(
                               'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM',
-                              VolatileStore());
+                              await HiveStore.create());
                           var firestore = Firestore('cross-clip-2714',
                               auth: FirebaseAuth.instance);
                           var users = firestore.collection('users');

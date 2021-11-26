@@ -10,8 +10,6 @@ class TextClipboardAddPage extends StatefulWidget {
 }
 
 class _TextClipboardAddPageState extends State<TextClipboardAddPage> {
-  var auth =
-      FirebaseAuth('AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', VolatileStore());
   var uid = FirebaseAuth.instance.userId;
   var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
 

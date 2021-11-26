@@ -14,8 +14,6 @@ class TextClipboard extends StatefulWidget {
 }
 
 class _TextClipboardState extends State<TextClipboard> {
-  var auth =
-      FirebaseAuth('AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', VolatileStore());
   var uid = FirebaseAuth.instance.userId;
   var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
   @override
@@ -30,7 +28,7 @@ class _TextClipboardState extends State<TextClipboard> {
             if (!snapshot.hasData) {
               print(snapshot);
               print('UID:$uid');
-              print(auth.apiKey);
+              print(FirebaseAuth.instance.apiKey);
               return const Loading();
             }
             var userDocument = snapshot.data!;
