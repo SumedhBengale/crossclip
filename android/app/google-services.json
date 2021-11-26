@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "29417886437",
+    "firebase_url": "https://cross-clip-2714-default-rtdb.firebaseio.com",
+    "project_id": "cross-clip-2714",
+    "storage_bucket": "cross-clip-2714.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29417886437:android:8d25955a719fe4fcf67a0c",
+        "android_client_info": {
+          "package_name": "com.ssb.crossclip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "29417886437-afmu6dj10rmhapmuac2srrsokcf5necg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "29417886437-afmu6dj10rmhapmuac2srrsokcf5necg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

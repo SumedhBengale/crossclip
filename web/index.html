@@ -26,6 +26,9 @@
   <meta name="apple-mobile-web-app-title" content="crossclip">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
   <title>crossclip</title>
   <link rel="manifest" href="manifest.json">
 </head>
@@ -33,6 +36,25 @@
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+  apiKey: "AIzaSyCeolHnaxUU2gq7FXc0hWXXMVedEQHB1-4",
+  authDomain: "cross-clip-2714.firebaseapp.com",
+  databaseURL: "https://cross-clip-2714-default-rtdb.firebaseio.com",
+  projectId: "cross-clip-2714",
+  storageBucket: "cross-clip-2714.appspot.com",
+  messagingSenderId: "29417886437",
+  appId: "1:29417886437:web:b41224d1120bdd27f67a0c",
+  measurementId: "G-ZRLSNZ9PVD"
+};
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <script>
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
@@ -97,5 +119,6 @@
       loadMainDartJs();
     }
   </script>
+  
 </body>
 </html>
