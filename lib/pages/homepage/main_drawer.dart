@@ -115,7 +115,7 @@ class _MainDrawerState extends State<MainDrawer> {
           color: Colors.white,
           margin: EdgeInsets.all(10),
           child: Text(
-            "Note:Make sure to Sign In with the same Id in all devices using Crossclip",
+            "Note:Make sure to Sign In with the same Email Id in all devices using Crossclip",
             style: TextStyle(fontWeight: FontWeight.bold),
           )),
     ]);

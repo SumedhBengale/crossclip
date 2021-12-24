@@ -15,7 +15,6 @@ void main() async {
   Hive.registerAdapter(TokenAdapter());
   FirebaseAuth.initialize(
       'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', await HiveStore.create());
-  var auth = FirebaseAuth.instance;
 
   runApp(const App());
 }
