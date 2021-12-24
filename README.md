@@ -9,4 +9,3 @@ This app has 2 versions as of yet, a Windows and an Android version.
 Hoping to add Linux, MacOS and iOS support sometime in the future.
 
 New changes will go into the beta branch first and then into the main branch.
-Platform specific changes will go into the respective branches.
