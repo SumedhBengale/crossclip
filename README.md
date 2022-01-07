@@ -1,6 +1,6 @@
 # crossclip
 
-A project to share text between Windows and Android Devices.
+A project to share text and files between Windows and Android Devices.
 
 ## Getting Started
 

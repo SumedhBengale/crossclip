@@ -1,20 +1,33 @@
 import 'dart:io';
 
 import 'package:firedart/firedart.dart';
+import 'package:desktop_window/desktop_window.dart';
 import 'package:crossclip/pages/authenticate/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
 import 'package:hive/hive.dart';
 import 'hive_store.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
+String? selectedDirectory = '';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows) {
+    await DesktopWindow.setMinWindowSize(const Size(500, 800));
+  }
   Directory directory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   Hive.registerAdapter(TokenAdapter());
   FirebaseAuth.initialize(
       'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM', await HiveStore.create());
+
+  if (Platform.isAndroid) {
+    selectedDirectory = '/storage/emulated/0/Download';
+  } else if (Platform.isWindows) {
+    Directory? downloadDirectory = await path_provider.getDownloadsDirectory();
+    selectedDirectory = downloadDirectory!.path;
+  }
 
   runApp(const App());
 }

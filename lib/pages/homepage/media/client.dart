@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:crossclip/pages/homepage/media/server.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 int size = 0;
 BytesBuilder builder = BytesBuilder(copy: false);
@@ -11,6 +12,13 @@ void startClient(String ipAddress, String fileName, String downloadPath,
     var socket = await Socket.connect(ipAddress, 2714);
     print("Connected");
     socket.write('Send Data');
+    if (Platform.isAndroid) {
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+      }
+      await File('$downloadPath/$fileName').create(recursive: true);
+    }
     var file = File('$downloadPath/$fileName').openWrite();
     await socket.map(toIntList).pipe(file);
     print(downloadPath);
