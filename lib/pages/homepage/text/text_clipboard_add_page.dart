@@ -38,7 +38,7 @@ class _TextClipboardAddPageState extends State<TextClipboardAddPage> {
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.yellow)),
-                    hintText: 'Enter your Email',
+                    hintText: 'Enter the Text',
                   ),
                 )),
             Padding(

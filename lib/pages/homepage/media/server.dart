@@ -5,7 +5,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firedart/firedart.dart';
 
 void startServer(PlatformFile file, String ipAddress) async {
-  final server = await ServerSocket.bind(ipAddress, 2714, shared: true);
+  final server =
+      await ServerSocket.bind(ipAddress.toString(), 2714, shared: true);
   print("Server hosted on port:2714");
   print(ipAddress);
 

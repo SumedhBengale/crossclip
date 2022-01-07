@@ -1,7 +1,7 @@
 import 'package:crossclip/pages/authenticate/sign_up.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
+import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
-import 'auth_services.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -77,15 +77,40 @@ class _SignInState extends State<SignIn> {
                               MaterialStateProperty.all<Color>(Colors.yellow),
                         ),
                         onPressed: () async {
+                          var status = 'yes';
                           print(emailController.text);
                           print(passwordController.text);
-                          await emailSignIn(
-                              emailController.text, passwordController.text);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomePage()),
-                          );
+                          try {
+                            await FirebaseAuth.instance.signIn(
+                                emailController.text, passwordController.text);
+                          } catch (e) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              duration: Duration(seconds: 1),
+                              behavior: SnackBarBehavior.fixed,
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(color: Colors.yellow),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                              content: Text(
+                                'Something went wrong, please check your network and credentials',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ));
+                            status = 'no';
+                          }
+                          if (status == 'yes') {
+                            print("Signed in");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()),
+                            );
+                          } else {}
                         },
                         child: const Text(
                           'Sign In',
