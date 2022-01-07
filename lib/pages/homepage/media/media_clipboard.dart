@@ -1,10 +1,10 @@
-import 'package:r_get_ip/r_get_ip.dart';
-import 'package:crossclip/main.dart';
+import 'package:crossclip/main.dart' as main;
 import 'package:firedart/firedart.dart';
 import 'package:crossclip/pages/homepage/media/server.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:crossclip/pages/homepage/main_drawer.dart' as drawer;
+import 'package:r_get_ip/r_get_ip.dart';
+import '../../../main.dart';
 import 'client.dart';
 import 'server.dart';
 
@@ -17,14 +17,19 @@ class MediaClipboard extends StatefulWidget {
   _MediaClipboardState createState() => _MediaClipboardState();
 }
 
-class _MediaClipboardState extends State<MediaClipboard> {
+class _MediaClipboardState extends State<MediaClipboard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  final ScrollController mediaScrollController = ScrollController();
   var uid = FirebaseAuth.instance.userId;
   var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
 
-  String? get downloadPath => drawer.selectedDirectory;
+  String? get downloadPath => main.selectedDirectory;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var documentStream = firestore.collection('users').document(uid).stream;
     var documentRef = firestore.collection('users').document(uid);
 
@@ -56,6 +61,7 @@ class _MediaClipboardState extends State<MediaClipboard> {
 
     void recieveFile(String ipAddress, String fileName, String downloadPath,
         index, context) async {
+      print("Recieving");
       startClient(ipAddress, fileName, downloadPath, index, context);
     }
 
@@ -76,11 +82,13 @@ class _MediaClipboardState extends State<MediaClipboard> {
                 padding: const EdgeInsets.only(
                     left: 5, right: 5, top: 20, bottom: 20),
                 scrollDirection: Axis.vertical,
+                controller: mediaScrollController,
                 itemCount: userDocument['media_clipboard'].length,
                 itemBuilder: (context, index) {
                   String ipAddress;
                   String fileName;
                   return Dismissible(
+                      direction: DismissDirection.startToEnd,
                       key: UniqueKey(),
                       onDismissed: (direction) {
                         ScaffoldMessenger.of(context)
@@ -125,22 +133,6 @@ class _MediaClipboardState extends State<MediaClipboard> {
                                                 .toString(),
                                             textAlign: TextAlign.center,
                                             overflow: TextOverflow.ellipsis),
-                                        Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 5),
-                                            child: Text(
-                                                'Shared on port- ' +
-                                                    userDocument[
-                                                                'media_clipboard']
-                                                            [index]['ipAddress']
-                                                        .toString() +
-                                                    ':2714',
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 15),
-                                                overflow:
-                                                    TextOverflow.ellipsis))
                                       ]),
                                   trailing: Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
@@ -167,8 +159,6 @@ class _MediaClipboardState extends State<MediaClipboard> {
                                                 userDocument['media_clipboard']
                                                         [index]['fileName']
                                                     .toString();
-                                            // if (ipAddress ==
-                                            //     await RGetIp.internalIP) {
                                             recieveFile(ipAddress, fileName,
                                                 downloadPath!, index, context);
                                             ScaffoldMessenger.of(context)
@@ -201,18 +191,22 @@ class _MediaClipboardState extends State<MediaClipboard> {
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          backgroundColor: Colors.yellow,
-          onPressed: () => {fetchFile()},
-          label: const Text(
-            'Add to Clipboard',
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          icon: const Icon(Icons.add, color: Colors.black),
-        ));
+        floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: FloatingActionButton.extended(
+              heroTag: 'add_media',
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              backgroundColor: Colors.yellow,
+              hoverColor: Colors.white,
+              onPressed: () => {fetchFile()},
+              label: const Text(
+                'Add Media',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              icon: const Icon(Icons.add, color: Colors.black),
+            )));
   }
 }

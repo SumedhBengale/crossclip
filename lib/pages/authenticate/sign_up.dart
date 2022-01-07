@@ -1,4 +1,3 @@
-import 'package:crossclip/pages/authenticate/auth_services.dart';
 import 'package:crossclip/pages/homepage/homepage.dart';
 import 'package:crossclip/hive_store.dart';
 import 'package:flutter/material.dart';
@@ -100,31 +99,58 @@ class _SignUpState extends State<SignUp> {
                         onPressed: () async {
                           if (passwordController.text ==
                               passwordController1.text) {
+                            var status = 'yes';
                             print(emailController.text);
                             print(passwordController.text);
-                            await emailSignUp(
-                                emailController.text, passwordController.text);
+                            try {
+                              await FirebaseAuth.instance.signUp(
+                                  emailController.text,
+                                  passwordController.text);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                duration: Duration(seconds: 1),
+                                behavior: SnackBarBehavior.fixed,
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(color: Colors.yellow),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                  ),
+                                ),
+                                content: Text(
+                                  'Something went wrong, please check your network and credentials',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ));
+                              status = 'no';
+                            }
+                            if (status == 'yes') {
+                              print("Signed in");
+                              var auth = FirebaseAuth(
+                                  'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM',
+                                  await HiveStore.create());
+                              var firestore = Firestore('cross-clip-2714',
+                                  auth: FirebaseAuth.instance);
+                              var users = firestore.collection('users');
+                              users
+                                  .document(FirebaseAuth.instance.userId)
+                                  .set({
+                                    'text_clipboard': [],
+                                    'media_clipboard': []
+                                  })
+                                  .then((value) =>
+                                      print("Clipboard sucessfully created"))
+                                  .catchError((error) => print(
+                                      "Failed to create clipboard: $error"));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()),
+                              );
+                            } else {}
                           }
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomePage()),
-                          );
-                          var auth = FirebaseAuth(
-                              'AIzaSyBV4BfSgK9fHO5b7hJwvcn2PbE4EGwYYWM',
-                              await HiveStore.create());
-                          var firestore = Firestore('cross-clip-2714',
-                              auth: FirebaseAuth.instance);
-                          var users = firestore.collection('users');
-                          users
-                              .document(FirebaseAuth.instance.userId)
-                              .set(
-                                  {'text_clipboard': [], 'media_clipboard': []})
-                              .then((value) =>
-                                  print("Clipboard sucessfully created"))
-                              .catchError((error) =>
-                                  print("Failed to create clipboard: $error"));
                         },
                         child: const Text(
                           'Sign Up',

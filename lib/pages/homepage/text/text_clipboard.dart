@@ -13,11 +13,17 @@ class TextClipboard extends StatefulWidget {
   _TextClipboardState createState() => _TextClipboardState();
 }
 
-class _TextClipboardState extends State<TextClipboard> {
+class _TextClipboardState extends State<TextClipboard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  final ScrollController textScrollController = ScrollController();
+
   var uid = FirebaseAuth.instance.userId;
   var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var documentStream = firestore.collection('users').document(uid).stream;
     var documentRef = firestore.collection('users').document(uid);
     return Scaffold(
@@ -39,9 +45,11 @@ class _TextClipboardState extends State<TextClipboard> {
                 padding: const EdgeInsets.only(
                     left: 5, right: 5, top: 20, bottom: 20),
                 scrollDirection: Axis.vertical,
+                controller: textScrollController,
                 itemCount: userDocument['text_clipboard'].length,
                 itemBuilder: (context, index) {
                   return Dismissible(
+                      direction: DismissDirection.endToStart,
                       key: UniqueKey(),
                       onDismissed: (direction) {
                         ScaffoldMessenger.of(context)
@@ -141,22 +149,26 @@ class _TextClipboardState extends State<TextClipboard> {
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          backgroundColor: Colors.yellow,
-          onPressed: () => showDialog(
-              context: context,
-              builder: (context) {
-                return const TextClipboardAddPage();
-              }),
-          label: const Text(
-            'Add to Clipboard',
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          icon: const Icon(Icons.add, color: Colors.black),
-        ));
+        floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: FloatingActionButton.extended(
+              heroTag: 'add_text',
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              backgroundColor: Colors.yellow,
+              hoverColor: Colors.white,
+              onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const TextClipboardAddPage();
+                  }),
+              label: const Text(
+                'Add Text',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              icon: const Icon(Icons.add, color: Colors.black),
+            )));
   }
 }
