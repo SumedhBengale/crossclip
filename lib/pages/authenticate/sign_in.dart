@@ -22,6 +22,13 @@ class _SignInState extends State<SignIn> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      SizedBox(
+                          height: 200,
+                          width: 200,
+                          child: Image.asset(
+                            'assets/images/logo.png',
+                            fit: BoxFit.contain,
+                          )),
                       Text(
                         "Cross Clip",
                         style: TextStyle(
@@ -37,35 +44,41 @@ class _SignInState extends State<SignIn> {
                           color: Colors.yellow[300],
                         ),
                       ),
-                      Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: TextFormField(
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: validateEmail,
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.yellow)),
-                              hintText: 'Enter your Email',
-                            ),
-                          )),
-                      Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: TextFormField(
-                            obscureText: true,
-                            controller: passwordController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: validatePassword,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.yellow)),
-                              hintText: 'Enter your Password',
-                            ),
-                          )),
+                      SizedBox(
+                          width: 800,
+                          child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: validateEmail,
+                                controller: emailController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.yellow)),
+                                  hintText: 'Enter your Email',
+                                ),
+                              ))),
+                      SizedBox(
+                          width: 800,
+                          child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: TextFormField(
+                                obscureText: true,
+                                controller: passwordController,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: validatePassword,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.yellow)),
+                                  hintText: 'Enter your Password',
+                                ),
+                              ))),
                       ElevatedButton(
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all(

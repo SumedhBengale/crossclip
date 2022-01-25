@@ -1,14 +1,40 @@
+import 'dart:io';
+import 'package:r_get_ip/r_get_ip.dart';
+
+import 'pickServerIP.dart';
 import 'package:crossclip/main.dart' as main;
 import 'package:firedart/firedart.dart';
 import 'package:crossclip/pages/homepage/media/server.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:r_get_ip/r_get_ip.dart';
 import '../../../main.dart';
 import 'client.dart';
 import 'server.dart';
 
 var mediaArray = [];
+int networks = 0;
+String ipAddress = "x";
+String fileName = "";
+var uid = FirebaseAuth.instance.userId;
+var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
+var documentStream = firestore.collection('users').document(uid).stream;
+var documentRef = firestore.collection('users').document(uid);
+List<NetworkInterface> interfaces = [];
+
+void sendToClipboard(String fileName, String ipAddress) {
+  mediaArray.add({
+    'fileName': fileName,
+    'ipAddress': ipAddress,
+  });
+  print(mediaArray);
+  documentRef.update({'media_clipboard': mediaArray});
+}
+
+void recieveFile(String ipAddress, String fileName, String downloadPath, index,
+    context) async {
+  print("Recieving");
+  startClient(ipAddress, fileName, downloadPath, index, context);
+}
 
 class MediaClipboard extends StatefulWidget {
   const MediaClipboard({Key? key}) : super(key: key);
@@ -22,48 +48,12 @@ class _MediaClipboardState extends State<MediaClipboard>
   @override
   bool get wantKeepAlive => true;
   final ScrollController mediaScrollController = ScrollController();
-  var uid = FirebaseAuth.instance.userId;
-  var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
 
   String? get downloadPath => main.selectedDirectory;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    var documentStream = firestore.collection('users').document(uid).stream;
-    var documentRef = firestore.collection('users').document(uid);
-
-    void sendToClipboard(String fileName, String ipAddress) {
-      mediaArray.add({
-        'fileName': fileName,
-        'ipAddress': ipAddress,
-      });
-      print(mediaArray);
-      documentRef.update({'media_clipboard': mediaArray});
-    }
-
-    void fetchFile() async {
-      FilePickerResult? result =
-          await FilePicker.platform.pickFiles(withReadStream: true);
-      if (result != null) {
-        final file = result.files.first;
-        print(file.name);
-        print(file.size);
-        print(file.extension);
-        final ipAddress = await RGetIp.internalIP;
-        print(ipAddress);
-        startServer(file, ipAddress!);
-        sendToClipboard(file.name, ipAddress);
-      } else {
-        // User canceled the picker
-      }
-    }
-
-    void recieveFile(String ipAddress, String fileName, String downloadPath,
-        index, context) async {
-      print("Recieving");
-      startClient(ipAddress, fileName, downloadPath, index, context);
-    }
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -199,7 +189,46 @@ class _MediaClipboardState extends State<MediaClipboard>
                   borderRadius: BorderRadius.circular(15)),
               backgroundColor: Colors.yellow,
               hoverColor: Colors.white,
-              onPressed: () => {fetchFile()},
+              onPressed: () async {
+                FilePickerResult? result =
+                    await FilePicker.platform.pickFiles(withReadStream: true);
+                if (result != null) {
+                  final file = result.files.first;
+                  fileName = file.name;
+                  print(file.name);
+                  print(file.size);
+                  print(file.extension);
+
+                  if (Platform.isWindows) {
+                    interfaces = await NetworkInterface.list(
+                        type: InternetAddressType.IPv4);
+                    if (interfaces.length != 1) {
+                      networks = interfaces.length;
+                      var ip = await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PickServerIP();
+                          });
+                      print(ip);
+                      print(ipAddress);
+                      if (ip == 'selected') {
+                        startServer(file, ipAddress);
+                        sendToClipboard(file.name, ipAddress);
+                      }
+                    } else {
+                      ipAddress = interfaces[0].addresses[0].address;
+                      startServer(file, ipAddress);
+                      sendToClipboard(file.name, ipAddress);
+                    }
+                  } else if (Platform.isAndroid) {
+                    ipAddress = (await RGetIp.internalIP)!;
+                    startServer(file, ipAddress);
+                    sendToClipboard(file.name, ipAddress);
+                  }
+                } else {
+                  // User canceled the picker
+                }
+              },
               label: const Text(
                 'Add Media',
                 style: TextStyle(

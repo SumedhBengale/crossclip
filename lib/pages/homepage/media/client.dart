@@ -8,8 +8,9 @@ int size = 0;
 BytesBuilder builder = BytesBuilder(copy: false);
 void startClient(String ipAddress, String fileName, String downloadPath,
     int index, context) async {
+  print("Trying");
+  var socket = await Socket.connect(ipAddress, 2714);
   try {
-    var socket = await Socket.connect(ipAddress, 2714);
     print("Connected");
     socket.write('Send Data');
     if (Platform.isAndroid) {

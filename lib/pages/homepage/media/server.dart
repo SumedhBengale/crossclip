@@ -11,6 +11,7 @@ void startServer(PlatformFile file, String ipAddress) async {
   print(ipAddress);
 
   server.listen((client) {
+    print("listening");
     try {
       handleClient(
         client,
