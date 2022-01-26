@@ -25,7 +25,7 @@ class _PickServerIPState extends State<PickServerIP> {
                     padding: EdgeInsets.only(
                         top: 20, left: 20, right: 20, bottom: 10),
                     child: Text(
-                      "Pick the Local Network IP Address",
+                      " Select the Sender's IP Address",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     )),

@@ -66,118 +66,140 @@ class _MediaClipboardState extends State<MediaClipboard>
             }
             var userDocument = snapshot.data!;
             mediaArray = userDocument['media_clipboard'].toList();
-            return ListView.builder(
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                padding: const EdgeInsets.only(
-                    left: 5, right: 5, top: 20, bottom: 20),
-                scrollDirection: Axis.vertical,
-                controller: mediaScrollController,
-                itemCount: userDocument['media_clipboard'].length,
-                itemBuilder: (context, index) {
-                  String ipAddress;
-                  String fileName;
-                  return Dismissible(
-                      direction: DismissDirection.startToEnd,
-                      key: UniqueKey(),
-                      onDismissed: (direction) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          duration: Duration(seconds: 1),
-                          behavior: SnackBarBehavior.fixed,
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                color: Color.fromARGB(255, 14, 13, 11)),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
-                          ),
-                          content: Text(
-                            'Deleted from Clipboard',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ));
+            return userDocument['media_clipboard'].isNotEmpty
+                ? ListView.builder(
+                    physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    padding: const EdgeInsets.only(
+                        left: 5, right: 5, top: 20, bottom: 20),
+                    scrollDirection: Axis.vertical,
+                    controller: mediaScrollController,
+                    itemCount: userDocument['media_clipboard'].length,
+                    itemBuilder: (context, index) {
+                      String ipAddress;
+                      String fileName;
+                      return Dismissible(
+                          direction: DismissDirection.startToEnd,
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              duration: Duration(seconds: 1),
+                              behavior: SnackBarBehavior.fixed,
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Color.fromARGB(255, 14, 13, 11)),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                              content: Text(
+                                'Deleted from Clipboard',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ));
 
-                        deleteFromClipboard(index);
-                      },
-                      child: Card(
-                          margin: const EdgeInsets.only(bottom: 20),
-                          elevation: 3.0,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.yellow),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Container(
-                              //The Container Here is necessary for constraints. Without it the Widget library gives an error.
-                              child: ListTile(
-                                  minVerticalPadding: 40,
-                                  title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            userDocument['media_clipboard']
-                                                    [index]['fileName']
-                                                .toString(),
-                                            textAlign: TextAlign.center,
-                                            overflow: TextOverflow.ellipsis),
-                                      ]),
-                                  trailing: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        ElevatedButton(
-                                          style: ButtonStyle(
-                                            shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15))),
-                                            overlayColor: MaterialStateProperty
-                                                .all<Color>(Colors.white),
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                    Color>(Colors.yellow),
-                                          ),
-                                          onPressed: () async {
-                                            ipAddress =
-                                                userDocument['media_clipboard']
-                                                        [index]['ipAddress']
-                                                    .toString();
-                                            fileName =
+                            deleteFromClipboard(index);
+                          },
+                          child: Card(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              elevation: 3.0,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(color: Colors.yellow),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Container(
+                                  //The Container Here is necessary for constraints. Without it the Widget library gives an error.
+                                  child: ListTile(
+                                      minVerticalPadding: 40,
+                                      title: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
                                                 userDocument['media_clipboard']
                                                         [index]['fileName']
+                                                    .toString(),
+                                                textAlign: TextAlign.center,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          ]),
+                                      trailing: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty
+                                                    .all(RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15))),
+                                                overlayColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(Colors.white),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(Colors.yellow),
+                                              ),
+                                              onPressed: () async {
+                                                ipAddress = userDocument[
+                                                            'media_clipboard']
+                                                        [index]['ipAddress']
                                                     .toString();
-                                            recieveFile(ipAddress, fileName,
-                                                downloadPath!, index, context);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(const SnackBar(
-                                              duration: Duration(seconds: 1),
-                                              behavior: SnackBarBehavior.fixed,
-                                              backgroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                side: BorderSide(
-                                                    color: Colors.yellow),
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(15),
-                                                  topRight: Radius.circular(15),
-                                                ),
+                                                fileName = userDocument[
+                                                            'media_clipboard']
+                                                        [index]['fileName']
+                                                    .toString();
+                                                recieveFile(
+                                                    ipAddress,
+                                                    fileName,
+                                                    downloadPath!,
+                                                    index,
+                                                    context);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                        const SnackBar(
+                                                  duration:
+                                                      Duration(seconds: 1),
+                                                  behavior:
+                                                      SnackBarBehavior.fixed,
+                                                  backgroundColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                    side: BorderSide(
+                                                        color: Colors.yellow),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(15),
+                                                      topRight:
+                                                          Radius.circular(15),
+                                                    ),
+                                                  ),
+                                                  content: Text(
+                                                    'Downloading File',
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                ));
+                                              },
+                                              child: const Icon(
+                                                Icons.download,
+                                                color: Colors.black,
                                               ),
-                                              content: Text(
-                                                'Downloading File',
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                            ));
-                                          },
-                                          child: const Icon(
-                                            Icons.download,
-                                            color: Colors.black,
-                                          ),
-                                        )
-                                      ])))));
-                });
+                                            )
+                                          ])))));
+                    })
+                : Center(
+                    child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Image.asset(
+                          'assets/images/empty.png',
+                          width: 300,
+                          fit: BoxFit.contain,
+                        )));
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
