@@ -161,7 +161,7 @@ class _TextClipboardState extends State<TextClipboard>
                         padding: const EdgeInsets.all(20),
                         child: Image.asset(
                           'assets/images/empty.png',
-                          width: 300,
+                          width: 200,
                           fit: BoxFit.contain,
                         )));
           },

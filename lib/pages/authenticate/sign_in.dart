@@ -95,8 +95,11 @@ class _SignInState extends State<SignIn> {
                           print(passwordController.text);
                           try {
                             await FirebaseAuth.instance.signIn(
-                                emailController.text, passwordController.text);
+                                emailController.text.trim(),
+                                passwordController.text);
                           } catch (e) {
+                            print(e);
+                            print(emailController.text);
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               duration: Duration(seconds: 1),

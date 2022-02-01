@@ -14,26 +14,28 @@ import 'server.dart';
 var mediaArray = [];
 int networks = 0;
 String ipAddress = "x";
-String fileName = "";
+var fileNames = [];
 var uid = FirebaseAuth.instance.userId;
 var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
 var documentStream = firestore.collection('users').document(uid).stream;
 var documentRef = firestore.collection('users').document(uid);
 List<NetworkInterface> interfaces = [];
 
-void sendToClipboard(String fileName, String ipAddress) {
+void sendToClipboard(List fileNames, String ipAddress) {
   mediaArray.add({
-    'fileName': fileName,
+    'fileName': fileNames,
     'ipAddress': ipAddress,
   });
   print(mediaArray);
   documentRef.update({'media_clipboard': mediaArray});
 }
 
-void recieveFile(String ipAddress, String fileName, String downloadPath, index,
-    context) async {
+Future<void> recieveFile(String ipAddress, List fileNames, String downloadPath,
+    index, context) async {
   print("Recieving");
-  startClient(ipAddress, fileName, downloadPath, index, context);
+  for (int i = 0; i < fileNames.length; i++) {
+    await startClient(ipAddress, fileNames[i], downloadPath, index, context);
+  }
 }
 
 class MediaClipboard extends StatefulWidget {
@@ -77,7 +79,6 @@ class _MediaClipboardState extends State<MediaClipboard>
                     itemCount: userDocument['media_clipboard'].length,
                     itemBuilder: (context, index) {
                       String ipAddress;
-                      String fileName;
                       return Dismissible(
                           direction: DismissDirection.startToEnd,
                           key: UniqueKey(),
@@ -149,16 +150,16 @@ class _MediaClipboardState extends State<MediaClipboard>
                                                             'media_clipboard']
                                                         [index]['ipAddress']
                                                     .toString();
-                                                fileName = userDocument[
-                                                            'media_clipboard']
-                                                        [index]['fileName']
-                                                    .toString();
-                                                recieveFile(
+                                                fileNames = userDocument[
+                                                        'media_clipboard']
+                                                    [index]['fileName'];
+                                                await recieveFile(
                                                     ipAddress,
-                                                    fileName,
+                                                    fileNames,
                                                     downloadPath!,
                                                     index,
                                                     context);
+                                                deleteFromClipboard(index);
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                         const SnackBar(
@@ -179,7 +180,7 @@ class _MediaClipboardState extends State<MediaClipboard>
                                                     ),
                                                   ),
                                                   content: Text(
-                                                    'Downloading File',
+                                                    'Download Complete',
                                                     style: TextStyle(
                                                         color: Colors.black),
                                                   ),
@@ -197,7 +198,7 @@ class _MediaClipboardState extends State<MediaClipboard>
                         padding: const EdgeInsets.all(20),
                         child: Image.asset(
                           'assets/images/empty.png',
-                          width: 300,
+                          width: 200,
                           fit: BoxFit.contain,
                         )));
           },
@@ -212,14 +213,16 @@ class _MediaClipboardState extends State<MediaClipboard>
               backgroundColor: Colors.yellow,
               hoverColor: Colors.white,
               onPressed: () async {
-                FilePickerResult? result =
-                    await FilePicker.platform.pickFiles(withReadStream: true);
+                fileNames = [];
+                FilePickerResult? result = await FilePicker.platform
+                    .pickFiles(withReadStream: true, allowMultiple: true);
                 if (result != null) {
-                  final file = result.files.first;
-                  fileName = file.name;
-                  print(file.name);
-                  print(file.size);
-                  print(file.extension);
+                  final file = result.files;
+                  print(file.length);
+                  for (int i = 0; i < file.length; i++) {
+                    fileNames.add(file[i].name);
+                  }
+                  print(fileNames);
 
                   if (Platform.isWindows) {
                     interfaces = await NetworkInterface.list(
@@ -234,18 +237,24 @@ class _MediaClipboardState extends State<MediaClipboard>
                       print(ip);
                       print(ipAddress);
                       if (ip == 'selected') {
-                        startServer(file, ipAddress);
-                        sendToClipboard(file.name, ipAddress);
+                        sendToClipboard(fileNames, ipAddress);
+
+                        for (int i = 0; i < fileNames.length; i++) {
+                          startServer(file[i], fileNames, ipAddress);
+                        }
                       }
                     } else {
                       ipAddress = interfaces[0].addresses[0].address;
-                      startServer(file, ipAddress);
-                      sendToClipboard(file.name, ipAddress);
+                      startServer(file[0], fileNames, ipAddress);
+                      sendToClipboard(fileNames, ipAddress);
                     }
                   } else if (Platform.isAndroid) {
                     ipAddress = (await RGetIp.internalIP)!;
-                    startServer(file, ipAddress);
-                    sendToClipboard(file.name, ipAddress);
+                    sendToClipboard(fileNames, ipAddress);
+
+                    for (int i = 0; i < fileNames.length; i++) {
+                      startServer(file[i], fileNames, ipAddress);
+                    }
                   }
                 } else {
                   // User canceled the picker
