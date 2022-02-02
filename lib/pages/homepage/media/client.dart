@@ -57,7 +57,7 @@ Future<void> startClient(String ipAddress, String fileName, String downloadPath,
         ),
       ),
       content: Text(
-        'Error: Cannot Create File, make sure file does not exist already',
+        'FileSystem Error: Please change the download location or restart your device',
         style: TextStyle(color: Colors.black),
       ),
     ));

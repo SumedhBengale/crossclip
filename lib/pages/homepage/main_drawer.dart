@@ -166,8 +166,7 @@ class _ChangeDirectoryState extends State<ChangeDirectory> {
                           setState(() {}),
                           if (selectedDirectory == null)
                             {
-                              selectedDirectory =
-                                  '/storage/emulated/0/CrossClip'
+                              selectedDirectory = '/storage/emulated/0/Download'
                             },
                           Navigator.pop(context)
                         },

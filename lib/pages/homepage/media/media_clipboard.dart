@@ -1,8 +1,7 @@
 import 'dart:io';
+import 'package:crossclip/pages/homepage/media/media_item_card.dart';
 import 'package:r_get_ip/r_get_ip.dart';
-
 import 'pickServerIP.dart';
-import 'package:crossclip/main.dart' as main;
 import 'package:firedart/firedart.dart';
 import 'package:crossclip/pages/homepage/media/server.dart';
 import 'package:flutter/material.dart';
@@ -48,11 +47,9 @@ class MediaClipboard extends StatefulWidget {
 class _MediaClipboardState extends State<MediaClipboard>
     with AutomaticKeepAliveClientMixin {
   @override
+  // bool working = false;
   bool get wantKeepAlive => true;
   final ScrollController mediaScrollController = ScrollController();
-
-  String? get downloadPath => main.selectedDirectory;
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -104,94 +101,7 @@ class _MediaClipboardState extends State<MediaClipboard>
 
                             deleteFromClipboard(index);
                           },
-                          child: Card(
-                              margin: const EdgeInsets.only(bottom: 20),
-                              elevation: 3.0,
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Colors.yellow),
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Container(
-                                  //The Container Here is necessary for constraints. Without it the Widget library gives an error.
-                                  child: ListTile(
-                                      minVerticalPadding: 40,
-                                      title: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                userDocument['media_clipboard']
-                                                        [index]['fileName']
-                                                    .toString(),
-                                                textAlign: TextAlign.center,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                          ]),
-                                      trailing: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                shape: MaterialStateProperty
-                                                    .all(RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15))),
-                                                overlayColor:
-                                                    MaterialStateProperty.all<
-                                                        Color>(Colors.white),
-                                                backgroundColor:
-                                                    MaterialStateProperty.all<
-                                                        Color>(Colors.yellow),
-                                              ),
-                                              onPressed: () async {
-                                                ipAddress = userDocument[
-                                                            'media_clipboard']
-                                                        [index]['ipAddress']
-                                                    .toString();
-                                                fileNames = userDocument[
-                                                        'media_clipboard']
-                                                    [index]['fileName'];
-                                                await recieveFile(
-                                                    ipAddress,
-                                                    fileNames,
-                                                    downloadPath!,
-                                                    index,
-                                                    context);
-                                                deleteFromClipboard(index);
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                        const SnackBar(
-                                                  duration:
-                                                      Duration(seconds: 1),
-                                                  behavior:
-                                                      SnackBarBehavior.fixed,
-                                                  backgroundColor: Colors.white,
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(
-                                                        color: Colors.yellow),
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(15),
-                                                      topRight:
-                                                          Radius.circular(15),
-                                                    ),
-                                                  ),
-                                                  content: Text(
-                                                    'Download Complete',
-                                                    style: TextStyle(
-                                                        color: Colors.black),
-                                                  ),
-                                                ));
-                                              },
-                                              child: const Icon(
-                                                Icons.download,
-                                                color: Colors.black,
-                                              ),
-                                            )
-                                          ])))));
+                          child: ItemCard(userDocument, index));
                     })
                 : Center(
                     child: Padding(
