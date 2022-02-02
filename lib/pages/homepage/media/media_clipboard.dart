@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:crossclip/ad_helper.dart';
+import 'package:crossclip/main.dart' as main;
 import 'package:crossclip/pages/homepage/media/media_item_card.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:r_get_ip/r_get_ip.dart';
 import 'pickServerIP.dart';
 import 'package:firedart/firedart.dart';
@@ -47,8 +50,8 @@ class MediaClipboard extends StatefulWidget {
 class _MediaClipboardState extends State<MediaClipboard>
     with AutomaticKeepAliveClientMixin {
   @override
-  // bool working = false;
   bool get wantKeepAlive => true;
+
   final ScrollController mediaScrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
@@ -161,13 +164,18 @@ class _MediaClipboardState extends State<MediaClipboard>
                   } else if (Platform.isAndroid) {
                     ipAddress = (await RGetIp.internalIP)!;
                     sendToClipboard(fileNames, ipAddress);
+                    print("Ad!!!");
+                    print(main.isInterstitialAdReady);
+                    if (main.isInterstitialAdReady) {
+                      main.interstitialAd?.show();
 
-                    for (int i = 0; i < fileNames.length; i++) {
-                      startServer(file[i], fileNames, ipAddress);
+                      for (int i = 0; i < fileNames.length; i++) {
+                        startServer(file[i], fileNames, ipAddress);
+                      }
                     }
+                  } else {
+                    // User canceled the picker
                   }
-                } else {
-                  // User canceled the picker
                 }
               },
               label: const Text(

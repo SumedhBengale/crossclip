@@ -1,6 +1,7 @@
 import 'package:crossclip/pages/homepage/text/text_clipboard.dart';
 import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
+import 'package:crossclip/main.dart' as main;
 
 class TextClipboardAddPage extends StatefulWidget {
   const TextClipboardAddPage({Key? key}) : super(key: key);
@@ -76,6 +77,12 @@ class _TextClipboardAddPageState extends State<TextClipboardAddPage> {
                               )),
                               val.add(addToClipboard.text),
                               documentRef.update({'text_clipboard': addVal}),
+                              print("Ad!!!"),
+                              print(main.isInterstitialAdReady),
+                              if (main.isInterstitialAdReady)
+                                {
+                                  main.interstitialAd?.show(),
+                                },
                               Navigator.pop(context),
                             },
                         child: const SizedBox(

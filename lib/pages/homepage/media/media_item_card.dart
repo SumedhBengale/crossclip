@@ -4,6 +4,7 @@ import 'package:crossclip/pages/homepage/media/server.dart';
 import 'package:flutter/material.dart';
 
 class ItemCard extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   var userDocument;
   int index;
   ItemCard(this.userDocument, this.index, {Key? key}) : super(key: key);
@@ -12,9 +13,9 @@ class ItemCard extends StatefulWidget {
 }
 
 class _ItemCardState extends State<ItemCard> {
-  @override
   bool working = false;
   String? get downloadPath => main.selectedDirectory;
+  @override
   Widget build(BuildContext context) {
     return Card(
         margin: const EdgeInsets.only(bottom: 20),
