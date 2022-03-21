@@ -83,7 +83,7 @@ class _SignInState extends State<SignIn> {
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15))),
+                                  borderRadius: BorderRadius.circular(10))),
                           overlayColor:
                               MaterialStateProperty.all<Color>(Colors.white),
                           backgroundColor:
@@ -113,7 +113,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                               ),
                               content: Text(
-                                'Something went wrong, please check your network and credentials',
+                                'Sign In Error: Something went wrong, please check your network and credentials',
                                 style: TextStyle(color: Colors.black),
                               ),
                             ));
@@ -154,6 +154,7 @@ class _SignInState extends State<SignIn> {
       }
       return 'Enter a Valid Email Address';
     }
+    return null;
   }
 
   String? validatePassword(String? value) {
@@ -166,7 +167,10 @@ class _SignInState extends State<SignIn> {
       }
       return 'Use a combination of letters and numbers';
     }
+    return null;
   }
 
-  String? confirmEmail(String? value) {}
+  String? confirmEmail(String? value) {
+    return null;
+  }
 }

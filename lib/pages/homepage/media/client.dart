@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:crossclip/pages/homepage/media/server.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 int size = 0;
 BytesBuilder builder = BytesBuilder(copy: false);
+
 Future<void> startClient(String ipAddress, String fileName, String downloadPath,
     int index, context) async {
   print("Trying");
@@ -40,7 +40,7 @@ Future<void> startClient(String ipAddress, String fileName, String downloadPath,
         ),
       ),
       content: Text(
-        'Error: Sender has disconnected, please send again',
+        'Server Error: Sender has disconnected, please send again',
         style: TextStyle(color: Colors.black),
       ),
     ));

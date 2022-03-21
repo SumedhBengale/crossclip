@@ -1,6 +1,3 @@
-import 'package:crossclip/pages/homepage/media/media_clipboard.dart';
-import 'package:crossclip/pages/homepage/media/server.dart';
-import 'package:file_picker/src/platform_file.dart';
 import 'package:flutter/material.dart';
 import 'media_clipboard.dart' as media_cliboard;
 

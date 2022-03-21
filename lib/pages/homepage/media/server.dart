@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:crossclip/pages/homepage/media/media_clipboard.dart';
 import 'dart:typed_data';
-import 'package:file_picker/file_picker.dart';
 import 'package:firedart/firedart.dart';
 
-void startServer(PlatformFile file, List fileNames, String ipAddress) async {
+void startServer(String? file, List fileNames, String ipAddress) async {
   final server =
       await ServerSocket.bind(ipAddress.toString(), 2714, shared: true);
   print("Server hosted on port:2714");
@@ -26,7 +25,7 @@ void startServer(PlatformFile file, List fileNames, String ipAddress) async {
   });
 }
 
-void handleClient(Socket client, PlatformFile file, List fileNames) async {
+void handleClient(Socket client, String? file, List fileNames) async {
   print("Connection from:"
       "${client.remoteAddress.address}:${client.remotePort}");
   print(fileNames);
@@ -37,7 +36,7 @@ void handleClient(Socket client, PlatformFile file, List fileNames) async {
     for (int i = 0; i < fileNames.length; i++) {
       if (request == fileNames[i]) {
         print("Name Correct");
-        await file.readStream!.pipe(client);
+        await File(file!).openRead().pipe(client);
       }
     }
     client.close();

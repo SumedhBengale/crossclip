@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'package:crossclip/ad_helper.dart';
 import 'package:crossclip/main.dart' as main;
 import 'package:crossclip/pages/homepage/media/media_item_card.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:r_get_ip/r_get_ip.dart';
-import 'pickServerIP.dart';
+import 'pick_server_ip.dart';
 import 'package:firedart/firedart.dart';
 import 'package:crossclip/pages/homepage/media/server.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +76,6 @@ class _MediaClipboardState extends State<MediaClipboard>
                     controller: mediaScrollController,
                     itemCount: userDocument['media_clipboard'].length,
                     itemBuilder: (context, index) {
-                      String ipAddress;
                       return Dismissible(
                           direction: DismissDirection.startToEnd,
                           key: UniqueKey(),
@@ -153,13 +150,15 @@ class _MediaClipboardState extends State<MediaClipboard>
                         sendToClipboard(fileNames, ipAddress);
 
                         for (int i = 0; i < fileNames.length; i++) {
-                          startServer(file[i], fileNames, ipAddress);
+                          startServer(file[i].path, fileNames, ipAddress);
                         }
                       }
                     } else {
                       ipAddress = interfaces[0].addresses[0].address;
-                      startServer(file[0], fileNames, ipAddress);
                       sendToClipboard(fileNames, ipAddress);
+                      for (int i = 0; i < fileNames.length; i++) {
+                        startServer(file[i].path, fileNames, ipAddress);
+                      }
                     }
                   } else if (Platform.isAndroid) {
                     ipAddress = (await RGetIp.internalIP)!;
@@ -168,10 +167,9 @@ class _MediaClipboardState extends State<MediaClipboard>
                     print(main.isInterstitialAdReady);
                     if (main.isInterstitialAdReady) {
                       main.interstitialAd?.show();
-
-                      for (int i = 0; i < fileNames.length; i++) {
-                        startServer(file[i], fileNames, ipAddress);
-                      }
+                    }
+                    for (int i = 0; i < fileNames.length; i++) {
+                      startServer(file[i].path, fileNames, ipAddress);
                     }
                   } else {
                     // User canceled the picker
