@@ -1,21 +1,18 @@
 import 'dart:io';
 import 'package:crossclip/pages/homepage/media/media_clipboard.dart';
 import 'dart:typed_data';
-import 'package:file_picker/file_picker.dart';
 import 'package:firedart/firedart.dart';
 
-void startServer(PlatformFile file, String ipAddress) async {
+void startServer(String? file, List fileNames, String ipAddress) async {
   final server =
       await ServerSocket.bind(ipAddress.toString(), 2714, shared: true);
   print("Server hosted on port:2714");
   print(ipAddress);
 
   server.listen((client) {
+    print("listening");
     try {
-      handleClient(
-        client,
-        file,
-      );
+      handleClient(client, file, fileNames);
       print("Sending data");
       server.close();
     } catch (e) {
@@ -28,16 +25,19 @@ void startServer(PlatformFile file, String ipAddress) async {
   });
 }
 
-void handleClient(
-  Socket client,
-  PlatformFile file,
-) async {
+void handleClient(Socket client, String? file, List fileNames) async {
   print("Connection from:"
       "${client.remoteAddress.address}:${client.remotePort}");
+  print(fileNames);
   client.listen((Uint8List data) async {
     final request = String.fromCharCodes(data);
-    if (request == 'Send Data') {
-      await file.readStream!.pipe(client);
+    print(request);
+    print(fileNames[0]);
+    for (int i = 0; i < fileNames.length; i++) {
+      if (request == fileNames[i]) {
+        print("Name Correct");
+        await File(file!).openRead().pipe(client);
+      }
     }
     client.close();
   });
@@ -47,9 +47,12 @@ void deleteFromClipboard(int index) {
   var uid = FirebaseAuth.instance.userId;
   var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
   var documentRef = firestore.collection('users').document(uid);
-  mediaArray.removeAt(index);
-  print(mediaArray);
-  documentRef.update({'media_clipboard': mediaArray});
+  try {
+    mediaArray.removeAt(index);
+    print(mediaArray);
+    documentRef.update({'media_clipboard': mediaArray});
+    // ignore: empty_catches
+  } on RangeError {}
 }
 
 void clearClipboard() {

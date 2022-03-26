@@ -9,7 +9,7 @@ class HiveStore extends TokenStore {
   static Future<HiveStore> create() async {
     // Make sure you call both:
     // Hive.init(storePath);
-    // Hive.registerAdapter(TokenAdapter(), adapterId);
+    // Hive.registerAdapter(TokenAdapter(), 74);
 
     var box = await Hive.openBox("auth_store",
         compactionStrategy: (entries, deletedEntries) => deletedEntries > 50);
@@ -35,8 +35,7 @@ class TokenAdapter extends TypeAdapter<Token> {
   final typeId = 42;
 
   @override
-  void write(BinaryWriter writer, Token token) =>
-      writer.writeMap(token.toMap());
+  void write(BinaryWriter writer, Token obj) => writer.writeMap(obj.toMap());
 
   @override
   Token read(BinaryReader reader) =>

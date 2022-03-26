@@ -5,12 +5,12 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
 
-  <Identity Name="@PACKAGE_GUID@" Publisher="CN=CMake Test Cert" Version="1.1.0.0" />
-  <mp:PhoneIdentity PhoneProductId="@PACKAGE_GUID@" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <Identity Name="@CrossClip@" Publisher="SumedhBengale" Version="1.1.0.0" />
+  <mp:PhoneIdentity PhoneProductId="@CrossClip@" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>@SHORT_NAME@</DisplayName>
-    <PublisherDisplayName>CMake Test Cert</PublisherDisplayName>
+    <DisplayName>@CrossClip@</DisplayName>
+    <PublisherDisplayName>SumedhBengale</PublisherDisplayName>
     <Logo>Assets/StoreLogo.png</Logo>
   </Properties>
 

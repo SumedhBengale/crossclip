@@ -1,14 +1,42 @@
+import 'dart:io';
 import 'package:crossclip/main.dart' as main;
+import 'package:crossclip/pages/homepage/media/media_item_card.dart';
+import 'package:r_get_ip/r_get_ip.dart';
+import 'pick_server_ip.dart';
 import 'package:firedart/firedart.dart';
 import 'package:crossclip/pages/homepage/media/server.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:r_get_ip/r_get_ip.dart';
 import '../../../main.dart';
 import 'client.dart';
 import 'server.dart';
 
 var mediaArray = [];
+int networks = 0;
+String ipAddress = "x";
+var fileNames = [];
+var uid = FirebaseAuth.instance.userId;
+var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
+var documentStream = firestore.collection('users').document(uid).stream;
+var documentRef = firestore.collection('users').document(uid);
+List<NetworkInterface> interfaces = [];
+
+void sendToClipboard(List fileNames, String ipAddress) {
+  mediaArray.add({
+    'fileName': fileNames,
+    'ipAddress': ipAddress,
+  });
+  print(mediaArray);
+  documentRef.update({'media_clipboard': mediaArray});
+}
+
+Future<void> recieveFile(String ipAddress, List fileNames, String downloadPath,
+    index, context) async {
+  print("Recieving");
+  for (int i = 0; i < fileNames.length; i++) {
+    await startClient(ipAddress, fileNames[i], downloadPath, index, context);
+  }
+}
 
 class MediaClipboard extends StatefulWidget {
   const MediaClipboard({Key? key}) : super(key: key);
@@ -21,49 +49,11 @@ class _MediaClipboardState extends State<MediaClipboard>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
   final ScrollController mediaScrollController = ScrollController();
-  var uid = FirebaseAuth.instance.userId;
-  var firestore = Firestore('cross-clip-2714', auth: FirebaseAuth.instance);
-
-  String? get downloadPath => main.selectedDirectory;
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    var documentStream = firestore.collection('users').document(uid).stream;
-    var documentRef = firestore.collection('users').document(uid);
-
-    void sendToClipboard(String fileName, String ipAddress) {
-      mediaArray.add({
-        'fileName': fileName,
-        'ipAddress': ipAddress,
-      });
-      print(mediaArray);
-      documentRef.update({'media_clipboard': mediaArray});
-    }
-
-    void fetchFile() async {
-      FilePickerResult? result =
-          await FilePicker.platform.pickFiles(withReadStream: true);
-      if (result != null) {
-        final file = result.files.first;
-        print(file.name);
-        print(file.size);
-        print(file.extension);
-        final ipAddress = await RGetIp.internalIP;
-        print(ipAddress);
-        startServer(file, ipAddress!);
-        sendToClipboard(file.name, ipAddress);
-      } else {
-        // User canceled the picker
-      }
-    }
-
-    void recieveFile(String ipAddress, String fileName, String downloadPath,
-        index, context) async {
-      print("Recieving");
-      startClient(ipAddress, fileName, downloadPath, index, context);
-    }
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -76,118 +66,51 @@ class _MediaClipboardState extends State<MediaClipboard>
             }
             var userDocument = snapshot.data!;
             mediaArray = userDocument['media_clipboard'].toList();
-            return ListView.builder(
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                padding: const EdgeInsets.only(
-                    left: 5, right: 5, top: 20, bottom: 20),
-                scrollDirection: Axis.vertical,
-                controller: mediaScrollController,
-                itemCount: userDocument['media_clipboard'].length,
-                itemBuilder: (context, index) {
-                  String ipAddress;
-                  String fileName;
-                  return Dismissible(
-                      direction: DismissDirection.startToEnd,
-                      key: UniqueKey(),
-                      onDismissed: (direction) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          duration: Duration(seconds: 1),
-                          behavior: SnackBarBehavior.fixed,
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                color: Color.fromARGB(255, 14, 13, 11)),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
-                          ),
-                          content: Text(
-                            'Deleted from Clipboard',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ));
+            return userDocument['media_clipboard'].isNotEmpty
+                ? ListView.builder(
+                    physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    padding: const EdgeInsets.only(
+                        left: 5, right: 5, top: 20, bottom: 20),
+                    scrollDirection: Axis.vertical,
+                    controller: mediaScrollController,
+                    itemCount: userDocument['media_clipboard'].length,
+                    itemBuilder: (context, index) {
+                      return Dismissible(
+                          direction: DismissDirection.startToEnd,
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              duration: Duration(seconds: 1),
+                              behavior: SnackBarBehavior.fixed,
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Color.fromARGB(255, 14, 13, 11)),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                              content: Text(
+                                'Deleted from Clipboard',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ));
 
-                        deleteFromClipboard(index);
-                      },
-                      child: Card(
-                          margin: const EdgeInsets.only(bottom: 20),
-                          elevation: 3.0,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.yellow),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Container(
-                              //The Container Here is necessary for constraints. Without it the Widget library gives an error.
-                              child: ListTile(
-                                  minVerticalPadding: 40,
-                                  title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            userDocument['media_clipboard']
-                                                    [index]['fileName']
-                                                .toString(),
-                                            textAlign: TextAlign.center,
-                                            overflow: TextOverflow.ellipsis),
-                                      ]),
-                                  trailing: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        ElevatedButton(
-                                          style: ButtonStyle(
-                                            shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15))),
-                                            overlayColor: MaterialStateProperty
-                                                .all<Color>(Colors.white),
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                    Color>(Colors.yellow),
-                                          ),
-                                          onPressed: () async {
-                                            ipAddress =
-                                                userDocument['media_clipboard']
-                                                        [index]['ipAddress']
-                                                    .toString();
-                                            fileName =
-                                                userDocument['media_clipboard']
-                                                        [index]['fileName']
-                                                    .toString();
-                                            recieveFile(ipAddress, fileName,
-                                                downloadPath!, index, context);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(const SnackBar(
-                                              duration: Duration(seconds: 1),
-                                              behavior: SnackBarBehavior.fixed,
-                                              backgroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                side: BorderSide(
-                                                    color: Colors.yellow),
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(15),
-                                                  topRight: Radius.circular(15),
-                                                ),
-                                              ),
-                                              content: Text(
-                                                'Downloading File',
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                            ));
-                                          },
-                                          child: const Icon(
-                                            Icons.download,
-                                            color: Colors.black,
-                                          ),
-                                        )
-                                      ])))));
-                });
+                            deleteFromClipboard(index);
+                          },
+                          child: ItemCard(userDocument, index));
+                    })
+                : Center(
+                    child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Image.asset(
+                          'assets/images/empty.png',
+                          width: 200,
+                          fit: BoxFit.contain,
+                        )));
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -199,7 +122,60 @@ class _MediaClipboardState extends State<MediaClipboard>
                   borderRadius: BorderRadius.circular(15)),
               backgroundColor: Colors.yellow,
               hoverColor: Colors.white,
-              onPressed: () => {fetchFile()},
+              onPressed: () async {
+                fileNames = [];
+                FilePickerResult? result = await FilePicker.platform
+                    .pickFiles(withReadStream: true, allowMultiple: true);
+                if (result != null) {
+                  final file = result.files;
+                  print(file.length);
+                  for (int i = 0; i < file.length; i++) {
+                    fileNames.add(file[i].name);
+                  }
+                  print(fileNames);
+
+                  if (Platform.isWindows) {
+                    interfaces = await NetworkInterface.list(
+                        type: InternetAddressType.IPv4);
+                    if (interfaces.length != 1) {
+                      networks = interfaces.length;
+                      var ip = await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PickServerIP();
+                          });
+                      print(ip);
+                      print(ipAddress);
+                      if (ip == 'selected') {
+                        sendToClipboard(fileNames, ipAddress);
+
+                        for (int i = 0; i < fileNames.length; i++) {
+                          startServer(file[i].path, fileNames, ipAddress);
+                        }
+                      }
+                    } else {
+                      ipAddress = interfaces[0].addresses[0].address;
+                      sendToClipboard(fileNames, ipAddress);
+                      for (int i = 0; i < fileNames.length; i++) {
+                        startServer(file[i].path, fileNames, ipAddress);
+                      }
+                    }
+                  } else if (Platform.isAndroid) {
+                    ipAddress = (await RGetIp.internalIP)!;
+                    sendToClipboard(fileNames, ipAddress);
+                    print("Ad!!!");
+                    print(main.isInterstitialAdReady);
+                    if (main.isInterstitialAdReady) {
+                      main.interstitialAd?.show();
+                    }
+                    for (int i = 0; i < fileNames.length; i++) {
+                      startServer(file[i].path, fileNames, ipAddress);
+                    }
+                  } else {
+                    // User canceled the picker
+                  }
+                }
+              },
               label: const Text(
                 'Add Media',
                 style: TextStyle(
