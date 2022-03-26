@@ -1,9 +1,12 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:crossclip/pages/homepage/media/media_clipboard.dart';
 import 'package:crossclip/pages/homepage/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'text/text_clipboard.dart';
 import 'dart:io' show Platform;
+
+const borderColor = Color(0xFF805306);
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -95,7 +98,8 @@ class _HomePageState extends State<HomePage> {
           home: Builder(
               builder: (context) => DefaultTabController(
                   length: 2,
-                  child: Scaffold(
+                  child: SafeArea(
+                      child: Scaffold(
                     backgroundColor: Colors.white,
                     drawer: Theme(
                         data: Theme.of(context).copyWith(
@@ -109,39 +113,61 @@ class _HomePageState extends State<HomePage> {
                     appBar: PreferredSize(
                         preferredSize: const Size.fromHeight(110),
                         child: Theme(
-                          data: ThemeData(
-                            splashColor: Colors.yellow,
-                          ),
-                          child: AppBar(
-                            elevation: 0,
-                            centerTitle: true,
-                            iconTheme: const IconThemeData(color: Colors.black),
-                            backgroundColor: Colors.yellow,
-                            title: const Text(
-                              "CrossClip",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                            data: ThemeData(
+                              splashColor: Colors.yellow,
+                              hoverColor: Colors.yellow,
                             ),
-                            bottom: TabBar(
-                                overlayColor: MaterialStateProperty.all<Color>(
-                                    Colors.yellow),
-                                indicator:
-                                    const BoxDecoration(color: Colors.yellow),
-                                tabs: const [
-                                  Tab(
-                                    child: Text(
-                                      "Text",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
+                            child: Column(children: [
+                              WindowTitleBarBox(
+                                  child: Container(
+                                      decoration: const BoxDecoration(
+                                          color: Colors.yellow),
+                                      child: WindowBorder(
+                                          color: Colors.yellow,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: MoveWindow(),
+                                              ),
+                                              const WindowButtons()
+                                            ],
+                                          )))),
+                              Expanded(
+                                child: AppBar(
+                                  elevation: 0,
+                                  centerTitle: true,
+                                  iconTheme:
+                                      const IconThemeData(color: Colors.black),
+                                  backgroundColor: Colors.yellow,
+                                  title: const Text(
+                                    "CrossClip",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
                                   ),
-                                  Tab(
-                                    child: Text("Media and Files",
-                                        style: TextStyle(color: Colors.black)),
-                                  )
-                                ]),
-                          ),
-                        )),
+                                  bottom: TabBar(
+                                      overlayColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.yellow),
+                                      indicator: const BoxDecoration(
+                                          color: Colors.yellow),
+                                      tabs: const [
+                                        Tab(
+                                          child: Text(
+                                            "Text",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Text("Media and Files",
+                                              style: TextStyle(
+                                                  color: Colors.black)),
+                                        )
+                                      ]),
+                                ),
+                              )
+                            ]))),
                     body: Row(children: const [
                       Expanded(
                         child: TextClipboard(),
@@ -153,7 +179,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Expanded(child: MediaClipboard()),
                     ]),
-                  ))));
+                  )))));
     }
+  }
+}
+
+class WindowButtons extends StatelessWidget {
+  const WindowButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        MinimizeWindowButton(),
+        MaximizeWindowButton(),
+        CloseWindowButton()
+      ],
+    );
   }
 }

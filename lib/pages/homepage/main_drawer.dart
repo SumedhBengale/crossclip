@@ -39,7 +39,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     side: const BorderSide(color: Colors.yellow),
                     borderRadius: BorderRadius.circular(15))),
-                overlayColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.yellow),
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () async => {
@@ -74,7 +74,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     side: const BorderSide(color: Colors.yellow),
                     borderRadius: BorderRadius.circular(15))),
-                overlayColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.yellow),
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () async => {
@@ -113,7 +113,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     side: const BorderSide(color: Colors.yellow),
                     borderRadius: BorderRadius.circular(15))),
-                overlayColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.yellow),
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () async => {
@@ -152,7 +152,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     side: const BorderSide(color: Colors.yellow),
                     borderRadius: BorderRadius.circular(15))),
-                overlayColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.yellow),
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () => {
@@ -190,7 +190,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     side: const BorderSide(color: Colors.yellow),
                     borderRadius: BorderRadius.circular(15))),
-                overlayColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.yellow),
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () async => {
@@ -336,9 +336,9 @@ class _DeleteAccountState extends State<DeleteAccount> {
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
                           overlayColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.red),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.yellow),
                         ),
                         onPressed: () async => {
                               await Firestore('cross-clip-2714',

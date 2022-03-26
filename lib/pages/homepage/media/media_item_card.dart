@@ -34,7 +34,9 @@ class _ItemCardState extends State<ItemCard> {
                       Text(
                           widget.userDocument['media_clipboard'][widget.index]
                                   ['fileName']
-                              .toString(),
+                              .toString()
+                              .replaceAll('[', '')
+                              .replaceAll(']', ''),
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis),
                     ]),

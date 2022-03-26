@@ -1,11 +1,11 @@
 {
-    "name": "crossclip",
-    "short_name": "crossclip",
+    "name": "CrossClip",
+    "short_name": "CrossClip",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Share Text over the Internet and Files over your Local Network Instantly!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

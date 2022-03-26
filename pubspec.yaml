@@ -1,5 +1,5 @@
 name: crossclip
-description: A new Flutter project.
+description: Share Text over the Internet and Files over your Local Network Instantly!.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -42,6 +42,7 @@ dependencies:
   platform: ^3.1.0
   receive_sharing_intent: ^1.4.5
   cupertino_icons: ^1.0.2
+  flutter_launcher_icons: ^0.9.2
 
   
 
@@ -56,6 +57,11 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
   msix: ^2.8.2
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +78,7 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/empty.png
+    - assets/images/logo_win.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -98,3 +105,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+
+msix_config:
+  display_name: CrossClip
+  publisher_display_name: SumedhBengale
+  identity_name: SumedhBengale.CrossClip
+  msix_version: 1.0.0.0
+  logo_path: assets/images/logo_win.png

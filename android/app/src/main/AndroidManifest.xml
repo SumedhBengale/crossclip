@@ -2,8 +2,8 @@
     package="com.ssb.crossclip">
    <application
         android:requestLegacyExternalStorage="true"
-        android:label="crossclip"
-        android:icon="@mipmap/ic_launcher">
+        android:label="CrossClip"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
@@ -55,4 +55,11 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-4664789967062460~8842893840"/>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
+    <uses-permission android:name="andorid.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="andorid.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>
