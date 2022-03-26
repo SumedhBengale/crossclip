@@ -55,6 +55,9 @@ class _ItemCardState extends State<ItemCard> {
                         setState(() {
                           working = true;
                         });
+                        if (main.isInterstitialAdReady) {
+                          main.interstitialAd?.show();
+                        }
                         ipAddress = widget.userDocument['media_clipboard']
                                 [widget.index]['ipAddress']
                             .toString();
